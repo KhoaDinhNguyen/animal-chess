@@ -1,0 +1,13 @@
+.moveableSquare {
+  background: red;
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.moveableSquare:hover {
+  border: 10px solid salmon;
+  height: 40px;
+  width: 40px;
+}
