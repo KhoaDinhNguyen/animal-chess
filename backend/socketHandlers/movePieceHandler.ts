@@ -1,6 +1,6 @@
-import { getGame, updateGameDatabase } from "../serverStore";
+import { getGame, updateGameDatabase } from "../serverStore.js";
 import { Position } from "@shared/game/core/Position";
-import { updateGame } from "./update/game";
+import { updateGame } from "./update/game.js";
 
 export const movePieceHandler = (data: any) => {
   const { gameId, from, to } = data;

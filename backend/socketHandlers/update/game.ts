@@ -1,5 +1,5 @@
-import { getSocketServerInstsance } from "../../serverStore"
-import { getGame } from "../../serverStore";
+import { getSocketServerInstsance } from "../../serverStore.js"
+import { getGame } from "../../serverStore.js";
 
 
 export const updateGame = async ({ gameId }: { gameId: number }) => {
