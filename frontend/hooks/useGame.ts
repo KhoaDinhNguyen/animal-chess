@@ -1,23 +1,26 @@
-import { Game } from "@/game/core/Game";
+import { Game } from "@shared/game/core/Game";
 import { create } from "zustand";
-import { Position } from "@/game/core/Position";
+import { Position } from "@shared/game/core/Position";
 
 interface GameStore {
-  game: Game
+  game: Game | null
   selectSquare: (position: Position) => void
-  move: (from: Position, to: Position) => void
+  setGame: (game: Game) => void
 }
 
 export const useGameStore = create<GameStore>((set) => ({
-  game: new Game(),
+  game: null,
   selectSquare(position: Position) {
-    set(state => ({
-      game: state.game.selectSquare(position)
-    }));
+    set(state => {
+      console.log("At useGame", state.game?.gameId);
+      return ({
+        game: state.game !== null ? state.game.selectSquare(position) : null
+      })
+    });
   },
-  move(from: Position, to: Position) {
+  setGame(game: Game) {
     set(state => ({
-      game: state.game.move(from, to)
+      game: Game.clone(game)
     }))
   }
 }))

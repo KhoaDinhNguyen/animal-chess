@@ -8,7 +8,7 @@ export type PieceType = "mouse" | "elephant" | "lion" | "tiger" | "leopard" | "w
 export abstract class Piece {
   public type: PieceType;
   public player: PlayerNum;
-  public directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+  public static directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
 
   constructor(player: PlayerNum) {
     this.player = player;
@@ -22,7 +22,7 @@ export abstract class Piece {
 
     const moves: Position[] = [];
 
-    for (const dir of this.directions) {
+    for (const dir of Piece.directions) {
       const [nextR, nextC] = [r + dir[0], c + dir[1]];
       if (nextR < 0 || nextR >= xAxis || nextC < 0 || nextC >= yAxis) continue;
 
@@ -158,7 +158,6 @@ export abstract class Piece {
     return jumpMoves;
   }
   abstract canCapture(piece: Piece): boolean;
-
 }
 
 // Jump coordinates

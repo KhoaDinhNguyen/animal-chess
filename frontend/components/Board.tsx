@@ -1,10 +1,9 @@
 "use client";
 
-import { Board as BoardClass } from "@/game/core/Board";
+import { Board as BoardClass } from "@shared/game/core/Board";
 import Square from "./Square";
 
 import styles from "./Board.module.css";
-import { useGameStore } from "@/hooks/useGame";
 
 interface BoardProps {
   board: BoardClass;

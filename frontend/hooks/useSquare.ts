@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { Square } from "@/game/core/Square"
+import { Square } from "@shared/game/core/Square";
 
 interface ChosenSquare {
   square: Square | null
