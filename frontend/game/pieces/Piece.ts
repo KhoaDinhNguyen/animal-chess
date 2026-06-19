@@ -3,18 +3,7 @@ import { Position } from "../core/Position";
 import { Square } from "../core/Square";
 import { TRAPS, DENS } from "../core/Board";
 
-export type PieceType = "mouse" | "elephant" | "lion"
-
-const VERTICAL_JUMP_TOP =
-  [[2, 1], [2, 2], [2, 4], [2, 5]]
-const VERTICAL_JUMP_BOTTOM =
-  [[6, 1], [6, 2], [6, 4], [6, 5]]
-const HORIZONTAL_JUMP_LEFT =
-  [[3, 0], [4, 0], [5, 0]]
-const HORIZONTAL_JUMP_MIDDLE =
-  [[3, 3], [4, 3], [5, 3]]
-const HORIZONTAL_JUMP_RIGHT =
-  [[3, 6], [4, 6], [5, 6]]
+export type PieceType = "mouse" | "elephant" | "lion" | "tiger" | "leopard" | "wolf" | "dog" | "cat"
 
 export abstract class Piece {
   public type: PieceType;
@@ -90,11 +79,12 @@ export abstract class Piece {
   canMoveToTrap(targetSquare: Square, player: PlayerNum): boolean {
     if (targetSquare.type !== "trap") return false;
     else if (targetSquare.piece == null) return true; // If the trap is empty, any animals can enter it
+    else if (targetSquare.piece.player == player) return false; // If the trap is occupied by allies, can not enter
 
     const trapOwner = TRAPS.slice(0, 3).some(([r, c]) => targetSquare.position.row == r && targetSquare.position.col == c) ? 0 : 1;
 
-    // If the trap is nonempty, then a trap must be from the current player and it must be opponent's piece
-    return trapOwner === player && targetSquare.piece.player !== player;
+    // If the trap is nonempty, then a trap must be from the current player or it can capture the animal inside the trap
+    return this.canCapture(targetSquare.piece) || trapOwner == player;
   }
 
   /**
@@ -104,7 +94,6 @@ export abstract class Piece {
    * @returns true if the animal can enter a river
    */
   canMoveToRiver(targetSquare: Square, player: PlayerNum): boolean {
-    console.log(this.type, targetSquare);
     if (targetSquare.type != "river") return false;
     if (this.type !== "mouse") return false;
     if (targetSquare.piece == null) return true; // If the river is empty, enter it
@@ -113,7 +102,7 @@ export abstract class Piece {
   }
 
   canJump(square: Square, game: Game): Position[] {
-    if (this.type !== "lion") return [];
+    if (this.type !== "lion" && this.type !== "tiger") return [];
 
     const [row, col] = [square.position.row, square.position.col];
     const jumpMoves: Position[] = [];
@@ -171,3 +160,15 @@ export abstract class Piece {
   abstract canCapture(piece: Piece): boolean;
 
 }
+
+// Jump coordinates
+const VERTICAL_JUMP_TOP =
+  [[2, 1], [2, 2], [2, 4], [2, 5]]
+const VERTICAL_JUMP_BOTTOM =
+  [[6, 1], [6, 2], [6, 4], [6, 5]]
+const HORIZONTAL_JUMP_LEFT =
+  [[3, 0], [4, 0], [5, 0]]
+const HORIZONTAL_JUMP_MIDDLE =
+  [[3, 3], [4, 3], [5, 3]]
+const HORIZONTAL_JUMP_RIGHT =
+  [[3, 6], [4, 6], [5, 6]]

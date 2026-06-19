@@ -13,12 +13,6 @@ interface BoardProps {
 export default function Board(props: BoardProps) {
   const { board } = props;
 
-  const game = useGameStore((state) => state.game);
-
-  console.log(game.selectedSquare);
-  console.log(game.moveableSquares);
-  console.log(game.player);
-
   return (
     <div className={styles.board}>
       {board.squares.map((row, rowIdx) => (

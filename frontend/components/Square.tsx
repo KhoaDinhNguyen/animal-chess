@@ -9,6 +9,11 @@ import { useGameStore } from "@/hooks/useGame";
 // Import styles
 import styles from "./Square.module.css";
 import { LionIcon } from "@/public/pieces/Lion";
+import { TigerIcon } from "@/public/pieces/Tiger";
+import { LeopardIcon } from "@/public/pieces/Leopard";
+import { DogIcon } from "@/public/pieces/Dog";
+import { WolfIcon } from "@/public/pieces/Wolf";
+import { CatIcon } from "@/public/pieces/Cat";
 
 interface SquareProps {
   square: SquareClass;
@@ -85,5 +90,17 @@ function getPieceIcon(type: PieceType) {
       return ElephantIcon();
     case "lion":
       return LionIcon();
+    case "tiger":
+      return TigerIcon();
+    case "leopard":
+      return LeopardIcon();
+    case "wolf":
+      return WolfIcon();
+    case "dog":
+      return DogIcon();
+    case "cat":
+      return CatIcon();
+    default:
+      return <></>;
   }
 }
