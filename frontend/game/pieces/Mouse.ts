@@ -1,19 +1,21 @@
-import { Board } from "../core/Board";
-import { Position } from "../core/Position";
+import { PlayerNum } from "../core/Game";
+import { Square } from "../core/Square";
 import { Piece } from "./Piece";
 
 export class Mouse extends Piece {
-  showMoves(board: Board, position: Position): Position[] {
-    const [r, c] = [position.row, position.col];
-    const [xAxis, yAxis] = [board.squares.length, board.squares[0].length];
+  constructor(player: PlayerNum) {
+    super(player);
+    this.type = "mouse";
+  }
 
-    const moves: Position[] = [];
+  canCapture(piece: Piece) {
+    return piece.type == "elephant";
+  }
 
-    if (r > 0) moves.push(new Position(r - 1, c));
-    if (r < xAxis - 1) moves.push(new Position(r + 1, c));
-    if (c > 0) moves.push(new Position(r, c - 1));
-    if (c < yAxis - 1) moves.push(new Position(r, c + 1));
+  canMoveRiver(square: Square, player: PlayerNum): boolean {
+    if (square.type != "river") return false;
+    if (square.piece == null) return true;
 
-    return moves;
+    return square.piece.type !== "dog";
   }
 }

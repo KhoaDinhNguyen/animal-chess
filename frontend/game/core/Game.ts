@@ -1,13 +1,16 @@
 import { Board } from "./Board";
 import { Position } from "./Position";
 
+export type PlayerNum = 0 | 1;
+
+// Game class controls 
 export class Game {
   public board: Board;
   public selectedSquare: Position | null;
   public moveableSquares: Position[];
-  public player: number;
+  public player: PlayerNum;
 
-  constructor(player?: number) {
+  constructor(player?: PlayerNum) {
     this.board = new Board();
     this.selectedSquare = null;
     this.moveableSquares = [];
@@ -23,9 +26,11 @@ export class Game {
     newGame.selectedSquare = position;
 
     const piece = selectedSquare.piece;
-    const isRightPlayer = piece != null && ((this.player == 0 && piece.color == "blue") || (this.player == 1 && piece.color == "red"))
+    const isRightPlayer = piece != null && this.player == selectedSquare.piece?.player;
+    // TESTING: player can move pieces any turns
+    // const isRightPlayer = true;
 
-    newGame.moveableSquares = isRightPlayer && piece != null ? piece.showMoves(newGame.board, selectedSquare.position) : [];
+    newGame.moveableSquares = isRightPlayer && piece != null ? piece.showMoves(newGame, selectedSquare.position) : [];
 
     return newGame;
   }

@@ -3,6 +3,7 @@
 import { SquareType, Square as SquareClass } from "@/game/core/Square";
 import { PieceType } from "@/game/pieces/Piece";
 import { MouseIcon } from "@/public/pieces/Mouse";
+import { ElephantIcon } from "@/public/pieces/Elephant";
 import { useGameStore } from "@/hooks/useGame";
 
 // Import styles
@@ -40,20 +41,22 @@ export default function Square(props: SquareProps) {
         border: "1px dashed black",
         background: getBackgroundColor(square.type),
         cursor: piece !== null ? "pointer" : "default",
+        position: "relative",
       }}
       onClick={onClickSquare}>
       {piece !== null && (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ background: piece.color, borderRadius: "100px", width: "80%", height: "80%" }}>
+          style={{
+            background: square.piece?.player == 0 ? "blue" : "red",
+            borderRadius: "100px",
+            width: "80%",
+            height: "80%",
+          }}>
           {getPieceIcon(piece.type)}
         </div>
       )}
-      {isMovable && (
-        <div>
-          <div className={styles.moveableSquare}></div>
-        </div>
-      )}
+      {isMovable && <div className={styles.moveableSquare}></div>}
     </div>
   );
 }
@@ -77,5 +80,7 @@ function getPieceIcon(type: PieceType) {
   switch (type) {
     case "mouse":
       return MouseIcon();
+    case "elephant":
+      return ElephantIcon();
   }
 }

@@ -5,27 +5,38 @@ import { Position } from "./Position";
 
 const NUM_ROW: number = 9
 const NUM_COL: number = 7
+
+// River's positions
 const RIVERS: number[][] =
   [[3, 1], [3, 2], [3, 4], [3, 5],
   [4, 1], [4, 2], [4, 4], [4, 5],
   [5, 1], [5, 2], [5, 4], [5, 5],]
 
-const TRAPS: number[][] =
+// Trap's positions
+export const TRAPS: number[][] =
   [[8, 2], [7, 3], [8, 4],
   [0, 2], [1, 3], [0, 4]]
 
-const DENS: number[][] =
-  [[0, 3], [8, 3]]
+// Den's positions
+export const DENS: number[][] =
+  [[8, 3], [0, 3]]
 
+// Mouse's positions
 const MOUSES: number[][] =
-  [[2, 0], [6, 6]]
+  [[6, 6], [2, 0]]
 
+// Elephant's positions
+const ELEPLANTS: number[][] =
+  [[6, 0], [2, 6]]
+
+/** @description Board class controls board's squares, and pieces */
 export class Board {
+  // Board consits multiple squares
   public squares: Square[][];
 
   constructor() {
     // Initializes
-    this.squares = Array.from({ length: NUM_ROW }, (_, rowIdx) => Array.from({ length: NUM_COL }, (_, colIdx) => new Square(new Position(rowIdx, colIdx), null, "plain")));
+    this.squares = Array.from({ length: NUM_ROW }, (_, rowIdx) => Array.from({ length: NUM_COL }, (_, colIdx) => new Square(new Position(rowIdx, colIdx,), null, "plain")));
 
     // Assign river, traps, and dens
     this.assignType(RIVERS, "river");
@@ -34,24 +45,38 @@ export class Board {
 
     // Assign pieces
     this.assignPiece(MOUSES, "mouse");
-
+    this.assignPiece(ELEPLANTS, "elephant");
   }
 
+  /**
+   * Assign square's type to each positions
+   * @param positions list of positions
+   * @param type square's type
+   */
   assignType(positions: number[][], type: SquareType) {
-    positions.forEach(position => {
+    positions.forEach((position, idx) => {
       const [r, c] = position;
       this.squares[r][c].type = type;
     })
   }
 
+  /**
+   * Assign piece's type to each positions
+   * @param positions list of positions
+   * @param type piece's type
+   */
   assignPiece(positions: number[][], type: PieceType) {
     positions.forEach((position, idx) => {
       const [r, c] = position;
-      const color = idx == 0 ? "red" : "blue";
-      this.squares[r][c].piece = PieceFactory.create(type, color);
+      this.squares[r][c].piece = PieceFactory.create(type, idx == 0 ? 0 : 1);
     })
   }
 
+  /**
+   * Given board parameter, return new clone object
+   * @param board board parameter
+   * @returns new object cloning from the parameter
+   */
   static clone(board: Board) {
     const newBoard = new Board();
     newBoard.squares = board.squares.map(row => row.map((square) => Square.clone(square)));
@@ -59,6 +84,11 @@ export class Board {
     return newBoard;
   }
 
+  /**
+   * Move piece from Position to Position
+   * @param from intial position
+   * @param to next position
+   */
   move(from: Position, to: Position) {
     const [oldR, oldC, newR, newC] = [from.row, from.col, to.row, to.col];
 
