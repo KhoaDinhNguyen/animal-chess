@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import SocketServer from "./socketServer.js";
+import SocketServer from "./socketServer";
 import cors from "cors";
 
 const app = express();

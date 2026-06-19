@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { Game } from "@shared/game/core/Game.js"
+import { Game } from "@shared/game/core/Game"
 
 let io: Server;
 let games = new Map<number, Game>();

@@ -1,9 +1,9 @@
 import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
-import { getGame, addNewGame, setSocketServerInstance } from "./serverStore.js";
-import { Game } from "@shared/game/core/Game.js";
-import { updateGame } from "./socketHandlers/update/game.js";
-import { movePieceHandler } from "./socketHandlers/movePieceHandler.js";
+import { getGame, addNewGame, setSocketServerInstance } from "./serverStore";
+import { Game } from "@shared/game/core/Game";
+import { updateGame } from "./socketHandlers/update/game";
+import { movePieceHandler } from "./socketHandlers/movePieceHandler";
 
 
 const registerSocketServer = (server: HttpServer) => {
