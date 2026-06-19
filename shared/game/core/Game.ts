@@ -9,16 +9,18 @@ export class Game {
   public selectedSquare: Position | null;
   public moveableSquares: Position[];
   public player: PlayerNum;
+  public gameId: number
 
-  constructor(player?: PlayerNum) {
+  constructor(gameId: number, player?: PlayerNum) {
     this.board = new Board();
     this.selectedSquare = null;
     this.moveableSquares = [];
     this.player = player == undefined ? 0 : player;
+    this.gameId = gameId;
   }
 
   selectSquare(position: Position) {
-    const newGame = new Game(this.player);
+    const newGame = new Game(this.gameId, this.player);
     newGame.board = Board.clone(this.board);
 
     const selectedSquare = newGame.board.squares[position.row][position.col];
@@ -36,9 +38,10 @@ export class Game {
   }
 
   move(from: Position, to: Position) {
-    const newGame = new Game(this.nextPlayer());
-    newGame.board = Board.clone(this.board);
+    console.log(this.gameId);
+    const newGame = new Game(this.gameId, this.nextPlayer());
 
+    newGame.board = Board.clone(this.board);
     newGame.board.move(from, to);
     newGame.selectedSquare = null;
     newGame.moveableSquares = [];
@@ -48,5 +51,16 @@ export class Game {
 
   nextPlayer() {
     return this.player == 1 ? 0 : 1
+  }
+
+  static clone(gameData: Game) {
+    const newGame = new Game(gameData.gameId);
+
+    newGame.board = Board.clone(gameData.board);
+    newGame.moveableSquares = gameData.moveableSquares;
+    newGame.player = gameData.player;
+    newGame.selectedSquare = gameData.selectedSquare;
+
+    return newGame;
   }
 }

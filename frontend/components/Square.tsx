@@ -1,11 +1,10 @@
 "use client";
 
-import { SquareType, Square as SquareClass } from "@/game/core/Square";
-import { PieceType } from "@/game/pieces/Piece";
+import { SquareType, Square as SquareClass } from "@shared/game/core/Square";
+import { PieceType } from "@shared/game/pieces/Piece";
 import { MouseIcon } from "@/public/pieces/Mouse";
 import { ElephantIcon } from "@/public/pieces/Elephant";
 import { useGameStore } from "@/hooks/useGame";
-
 // Import styles
 import styles from "./Square.module.css";
 import { LionIcon } from "@/public/pieces/Lion";
@@ -14,6 +13,8 @@ import { LeopardIcon } from "@/public/pieces/Leopard";
 import { DogIcon } from "@/public/pieces/Dog";
 import { WolfIcon } from "@/public/pieces/Wolf";
 import { CatIcon } from "@/public/pieces/Cat";
+
+import { emitMovePiece } from "@/realTimeCommunication/socketConnection";
 
 interface SquareProps {
   square: SquareClass;
@@ -25,8 +26,9 @@ export default function Square(props: SquareProps) {
 
   // Handle action
   const selectSquare = useGameStore((state) => state.selectSquare);
-  const move = useGameStore((state) => state.move);
   const game = useGameStore((state) => state.game);
+
+  if (game == null) return <></>;
 
   let isMovable = game.moveableSquares.some((moveableSquare) => {
     return moveableSquare.col == square.position.col && moveableSquare.row == square.position.row;
@@ -34,7 +36,9 @@ export default function Square(props: SquareProps) {
 
   const onClickSquare = () => {
     if (isMovable && game.selectedSquare) {
-      move(game.selectedSquare, square.position);
+      console.log(game.gameId);
+      emitMovePiece(game.gameId, game.selectedSquare, square.position);
+      // move(game.selectedSquare, square.position);
     } else {
       selectSquare(square.position);
     }
