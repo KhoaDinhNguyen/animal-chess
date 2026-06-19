@@ -1,5 +1,5 @@
 import { getGame, updateGameDatabase } from "../serverStore.js";
-import { Position } from "@shared/game/core/Position";
+import { Position } from "@shared/game/core/Position.js";
 import { updateGame } from "./update/game.js";
 
 export const movePieceHandler = (data: any) => {
