@@ -8,6 +8,7 @@ import { useGameStore } from "@/hooks/useGame";
 
 // Import styles
 import styles from "./Square.module.css";
+import { LionIcon } from "@/public/pieces/Lion";
 
 interface SquareProps {
   square: SquareClass;
@@ -82,5 +83,7 @@ function getPieceIcon(type: PieceType) {
       return MouseIcon();
     case "elephant":
       return ElephantIcon();
+    case "lion":
+      return LionIcon();
   }
 }

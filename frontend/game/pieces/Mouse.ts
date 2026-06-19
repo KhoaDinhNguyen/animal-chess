@@ -9,13 +9,6 @@ export class Mouse extends Piece {
   }
 
   canCapture(piece: Piece) {
-    return piece.type == "elephant";
-  }
-
-  canMoveRiver(square: Square, player: PlayerNum): boolean {
-    if (square.type != "river") return false;
-    if (square.piece == null) return true;
-
-    return square.piece.type !== "dog";
+    return piece.type == "elephant" || piece.type == "mouse";
   }
 }

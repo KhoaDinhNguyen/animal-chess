@@ -3,31 +3,34 @@ import { PieceType } from "../pieces/Piece";
 import { PieceFactory } from "../pieces/PieceFactory";
 import { Position } from "./Position";
 
-const NUM_ROW: number = 9
-const NUM_COL: number = 7
+const NUM_ROW: number = 9;
+const NUM_COL: number = 7;
 
 // River's positions
 const RIVERS: number[][] =
   [[3, 1], [3, 2], [3, 4], [3, 5],
   [4, 1], [4, 2], [4, 4], [4, 5],
-  [5, 1], [5, 2], [5, 4], [5, 5],]
+  [5, 1], [5, 2], [5, 4], [5, 5],];
 
 // Trap's positions
 export const TRAPS: number[][] =
   [[8, 2], [7, 3], [8, 4],
-  [0, 2], [1, 3], [0, 4]]
+  [0, 2], [1, 3], [0, 4]];
 
 // Den's positions
 export const DENS: number[][] =
-  [[8, 3], [0, 3]]
-
+  [[8, 3], [0, 3]];
 // Mouse's positions
 const MOUSES: number[][] =
-  [[6, 6], [2, 0]]
+  [[6, 6], [2, 0]];
 
 // Elephant's positions
 const ELEPLANTS: number[][] =
-  [[6, 0], [2, 6]]
+  [[6, 0], [2, 6]];
+
+// Lion's positions
+const LIONS: number[][] =
+  [[8, 6], [0, 0]];
 
 /** @description Board class controls board's squares, and pieces */
 export class Board {
@@ -46,6 +49,7 @@ export class Board {
     // Assign pieces
     this.assignPiece(MOUSES, "mouse");
     this.assignPiece(ELEPLANTS, "elephant");
+    this.assignPiece(LIONS, "lion");
   }
 
   /**
@@ -54,7 +58,7 @@ export class Board {
    * @param type square's type
    */
   assignType(positions: number[][], type: SquareType) {
-    positions.forEach((position, idx) => {
+    positions.forEach((position) => {
       const [r, c] = position;
       this.squares[r][c].type = type;
     })
