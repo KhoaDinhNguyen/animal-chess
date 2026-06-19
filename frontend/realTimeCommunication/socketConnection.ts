@@ -5,6 +5,7 @@ import { Position } from "@shared/game/core/Position";
 let socket: Socket;
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
+console.log(SERVER_URL);
 export const connectWithSocketServer = () => {
   socket = io(SERVER_URL);
 
