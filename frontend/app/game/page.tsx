@@ -3,7 +3,7 @@
 import Board from "@/components/Board";
 import { useGameStore } from "@/hooks/useGame";
 
-export default function PlayPage() {
+export default function GameMenuPage() {
   const game = useGameStore((state) => state.game);
 
   if (game == null) return <></>;
