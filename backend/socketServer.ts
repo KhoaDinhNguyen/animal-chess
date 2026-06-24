@@ -19,7 +19,7 @@ const registerSocketServer = (server: HttpServer) => {
   io.on("connect", (socket) => {
     console.log("user connect ", socket.id);
 
-    if (getGame(0) == null) addNewGame(0, new Game(0));
+    if (getGame(0) == null) addNewGame();
 
     updateGame({ gameId: 0 });
 

@@ -1,5 +1,13 @@
+"use server";
+
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL
 
+/**
+ * Fetches a game by its ID.
+ *
+ * @param gameId - The game ID.
+ * @returns The game object, or null if the request fails.
+ */
 export const fetchGameByGameId = async (gameId: string) => {
   const url = `${SERVER_URL}/game/${gameId}`;
 
@@ -10,10 +18,35 @@ export const fetchGameByGameId = async (gameId: string) => {
 
     if (!jsonResponse.ok) throw Error("TODO");
 
-    const respone: Response = await jsonResponse.json();
+    const game = await jsonResponse.json();
 
-    console.log(respone);
+    return game;
 
+  } catch (err) {
+    console.log(err);
+  }
+
+  return null;
+}
+
+/**
+ * Create game
+ * 
+ * @returns The game object, or null
+ */
+export const createGame = async () => {
+  const url = `${SERVER_URL}/game`;
+
+  try {
+    const jsonResponse = await fetch(url, {
+      method: "POST",
+    });
+
+    if (!jsonResponse.ok) throw Error("TODO");
+
+    const game = jsonResponse.json();
+
+    return game;
 
   } catch (err) {
     console.log(err);

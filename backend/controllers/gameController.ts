@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { getGame } from "../serverStore";
+import { getGame, addNewGame } from "../serverStore";
 
 async function fetchGameByGameId(req: Request, res: Response, next: NextFunction) {
   const { gameId } = req.params;
@@ -11,7 +11,7 @@ async function fetchGameByGameId(req: Request, res: Response, next: NextFunction
       throw Error("TODO");
     }
 
-    return res.status(200).json({ game: game });
+    return res.status(200).json(game);
   } catch (err) {
     console.log(err);
   }
@@ -19,8 +19,24 @@ async function fetchGameByGameId(req: Request, res: Response, next: NextFunction
   return res.status(400).json({ error: "Game is not found" })
 }
 
+async function createGame(req: Request, res: Response, next: NextFunction) {
+  try {
+    const newGameId = addNewGame();
+    const game = getGame(newGameId);
+
+    if (game == undefined) {
+      throw Error("TODO");
+    }
+
+    return res.status(201).json(game);
+  }
+  catch (err) {
+    console.log("TODO");
+  }
+}
 const gameControllers = {
-  fetchGameByGameId
+  fetchGameByGameId,
+  createGame
 };
 
 export default gameControllers;
