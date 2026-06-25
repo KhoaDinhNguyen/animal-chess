@@ -9,5 +9,9 @@ export const updateGame = async ({ gameId }: { gameId: number }) => {
 
   const game = getGame(gameId);
 
+  game?.board.squares.forEach(row => {
+    console.log(row);
+  })
+
   io.emit("game-state", game);
 }

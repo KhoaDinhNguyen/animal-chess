@@ -2,6 +2,8 @@ import { Game, PlayerNum } from "../core/Game";
 import { Position } from "../core/Position";
 import { Square } from "../core/Square";
 import { TRAPS, DENS } from "../core/Board";
+import { Move } from "../core/Move";
+
 
 export type PieceType = "mouse" | "elephant" | "lion" | "tiger" | "leopard" | "wolf" | "dog" | "cat"
 
@@ -15,12 +17,12 @@ export abstract class Piece {
     this.type = "mouse";
   }
 
-  showMoves(game: Game, position: Position): Position[] {
+  showMoves(game: Game, position: Position): Move[] {
     const board = game.board;
     const [r, c] = [position.row, position.col];
     const [xAxis, yAxis] = [board.squares.length, board.squares[0].length];
 
-    const moves: Position[] = [];
+    const moves: Move[] = [];
 
     for (const dir of Piece.directions) {
       const [nextR, nextC] = [r + dir[0], c + dir[1]];
@@ -29,15 +31,15 @@ export abstract class Piece {
       const square = board.squares[nextR][nextC];
 
       // Check if the next square is moveable to den, trap, river, and plain
-      if (this.canMoveToDen(square, game.player)) moves.push(new Position(nextR, nextC));
-      if (this.canMoveToTrap(square, game.player)) moves.push(new Position(nextR, nextC));
-      if (this.canMoveToRiver(square, game.player)) moves.push(new Position(nextR, nextC));
-      if (this.canMoveToPlain(square, game.player)) moves.push(new Position(nextR, nextC));
+      if (this.canMoveToDen(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
+      if (this.canMoveToTrap(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
+      if (this.canMoveToRiver(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
+      if (this.canMoveToPlain(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
     }
 
+    // Jump moves for tiger and lions
     const jumpMoves = this.canJump(board.squares[r][c], game);
-
-    for (const move of jumpMoves) moves.push(move);
+    for (const newPosition of jumpMoves) moves.push(new Move(position, newPosition));
 
     return moves;
   }

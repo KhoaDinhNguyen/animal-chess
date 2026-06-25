@@ -6,13 +6,13 @@ interface GameStore {
   game: Game | null
   selectSquare: (position: Position) => void
   setGame: (game: Game) => void
+  unselectSquare: () => void
 }
 
 export const useGameStore = create<GameStore>((set) => ({
   game: null,
   selectSquare(position: Position) {
     set(state => {
-      console.log("At useGame", state.game?.gameId);
       return ({
         game: state.game !== null ? state.game.selectSquare(position) : null
       })
@@ -22,5 +22,13 @@ export const useGameStore = create<GameStore>((set) => ({
     set(state => ({
       game: Game.clone(game)
     }))
-  }
+  },
+  unselectSquare() {
+    set(state => {
+      console.log("unselect square at useGameStore", state.game?.unselectSquare());
+      return ({
+        game: state.game !== null ? state.game.unselectSquare() : null
+      })
+    })
+  },
 }))

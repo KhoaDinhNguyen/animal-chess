@@ -2,6 +2,14 @@ import JoinGameButton from "@/components/button/JoinGameButton";
 import CreateGameButton from "@/components/button/CreateGameButton";
 import GameInstructionButton from "@/components/button/GameInstructionButton";
 
+const P1_COLOR = "#0077b6";
+const P2_COLOR = "#ef233c";
+
+export const COLORS = {
+  P1_COLOR,
+  P2_COLOR,
+};
+
 // Homepage
 export default function Home() {
   return (
@@ -124,7 +132,7 @@ export const ANIMALS = [
   { rank: 4, name: "Wolf", symbol: "🐺" },
   { rank: 3, name: "Dog", symbol: "🐕" },
   { rank: 2, name: "Cat", symbol: "🐱" },
-  { rank: 1, name: "Rat", symbol: "🐀" },
+  { rank: 1, name: "Mouse", symbol: "🐀" },
 ];
 
 function AnimalStrip() {

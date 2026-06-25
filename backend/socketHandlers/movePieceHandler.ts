@@ -12,6 +12,10 @@ export const movePieceHandler = (data: any) => {
   if (game != null) {
     const nextGameState = game.move(new Position(from.row, from.col), new Position(to.row, to.col));
 
+    // nextGameState.board.squares.forEach(row => {
+    //   console.log(row);
+    // });
+
     updateGameDatabase(gameId, nextGameState);
     updateGame({ gameId });
   }

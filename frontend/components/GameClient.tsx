@@ -2,21 +2,17 @@
 import { Game } from "@shared/game/core/Game";
 import Board from "./Board";
 import { useGameStore } from "@/hooks/useGame";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export default function GameClient({ initialGame }: { initialGame: Game }) {
+  const game = useGameStore((state) => state.game);
   const setGame = useGameStore((state) => state.setGame);
 
-  // Preventing setting the store on every render
-  const initialized = useRef(false);
-
   useEffect(() => {
-    if (initialized.current) return;
+    if (!game) {
+      setGame(initialGame);
+    }
+  }, [game, initialGame, setGame]);
 
-    setGame(initialGame);
-    initialized.current = true;
-  }, [initialized, initialGame]);
-
-  console.log(initialGame);
-  return <Board board={initialGame.board} />;
+  return <Board board={(game ?? initialGame).board} />;
 }
