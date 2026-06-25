@@ -10,13 +10,13 @@ export class Game {
   public selectedSquare: Position | null;
   public moveableSquares: Move[];
   public player: PlayerNum;
-  public gameId: number
+  public gameId: number;
 
-  constructor(gameId: number, player?: PlayerNum) {
+  constructor(gameId: number, player?: PlayerNum, p1Name?: string, p2Name?: string) {
     this.board = new Board();
     this.selectedSquare = null;
     this.moveableSquares = [];
-    this.player = player == undefined ? 0 : player;
+    this.player = player === undefined ? 0 : player;
     this.gameId = gameId;
   }
 

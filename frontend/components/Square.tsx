@@ -136,7 +136,7 @@ function MoveDirection({ move }: { move: Move }) {
   const { dr, dc } = move;
 
   return (
-    <div>
+    <div className="z-50">
       {dr === -1 && <ArrowUp size={19} style={{ color: "rgba(200,137,42,0.9)" }} />}
       {dr === 1 && <ArrowDown size={19} style={{ color: "rgba(200,137,42,0.9)" }} />}
       {dc === -1 && dr === 0 && <ArrowLeft size={19} style={{ color: "rgba(200,137,42,0.9)" }} />}

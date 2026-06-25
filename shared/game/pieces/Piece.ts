@@ -34,7 +34,7 @@ export abstract class Piece {
       if (this.canMoveToDen(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
       if (this.canMoveToTrap(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
       if (this.canMoveToRiver(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
-      if (this.canMoveToPlain(square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
+      if (this.canMoveToPlain(board.squares[r][c], square, game.player)) moves.push(new Move(position, new Position(nextR, nextC)));
     }
 
     // Jump moves for tiger and lions
@@ -51,10 +51,11 @@ export abstract class Piece {
    * @param player the current player
    * @returns true if the animal can enter a plain
    */
-  canMoveToPlain(targetSquare: Square, player: PlayerNum): boolean {
+  canMoveToPlain(currentSquare: Square, targetSquare: Square, player: PlayerNum): boolean {
     if (targetSquare.type !== "plain") return false;
     if (targetSquare.piece == null) return true;
     if (targetSquare.piece.player == player) return false;
+    if (currentSquare.type === "river" && targetSquare.piece.type === "elephant") return false;
 
     return this.canCapture(targetSquare.piece);
   }

@@ -34,7 +34,7 @@ export default function CreateGameModal(props: CreateGameModalProps) {
           <form action={formAction}>
             <div className="space-y-5">
               {/** Your name input */}
-              <div className="flex flex-col gap-1.5">
+              {/* <div className="flex flex-col gap-1.5">
                 <label
                   className="text-xs tracking-widest uppercase"
                   style={{ fontFamily: "'Cinzel', serif", color: "#8fa88a" }}>
@@ -54,7 +54,7 @@ export default function CreateGameModal(props: CreateGameModalProps) {
                   onFocus={(e) => (e.currentTarget.style.borderColor = "#c8892a")}
                   onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(200,137,42,0.25)")}
                 />
-              </div>
+              </div> */}
 
               {/** Game mode choose */}
               <div className="flex flex-col gap-2">
