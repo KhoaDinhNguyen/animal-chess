@@ -1,16 +1,19 @@
-"use client";
+import JoinGameButton from "@/components/button/JoinGameButton";
+import CreateGameButton from "@/components/button/CreateGameButton";
 
-import Board from "@/components/Board";
-import { useGameStore } from "@/hooks/useGame";
-
-export default function PlayPage() {
-  const game = useGameStore((state) => state.game);
-
-  if (game == null) return <></>;
-
+export default function GameHomePage() {
   return (
-    <div>
-      <Board board={game.board}></Board>
+    <div className="min-h-screen flex flex-col text-foreground relative overflow-x-hidden" style={styles.rootLayout}>
+      <div className="flex items-center gap-3 mt-8 mb-12 relative z-10 flex-wrap justify-center">
+        <JoinGameButton title="Join game" />
+        <CreateGameButton title="Create New Game" />
+      </div>
     </div>
   );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  rootLayout: {
+    background: "radial-gradient(ellipse at 50% 0%, #1a3a22 0%, #0b1a10 55%, #060e09 100%)",
+  },
+};

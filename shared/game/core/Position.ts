@@ -8,4 +8,13 @@ export class Position {
     this.row = row;
     this.col = col;
   }
+
+  // Equal position
+  equal(p: Position) {
+    return this.row === p.row && this.col === p.col;
+  }
+
+  static clone(p: Position) {
+    return new Position(p.row, p.col);
+  }
 }

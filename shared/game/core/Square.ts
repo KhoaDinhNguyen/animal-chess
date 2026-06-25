@@ -10,7 +10,7 @@ export class Square {
   public position: Position;
 
   constructor(position: Position, piece: Piece | null, type: SquareType) {
-    this.position = position;
+    this.position = Position.clone(position);
     this.piece = piece;
     this.type = type;
   }
@@ -18,6 +18,6 @@ export class Square {
   static clone(square: Square): Square {
     if (square.piece == null) return new Square(square.position, null, square.type);
 
-    return new Square(square.position, PieceFactory.create(square.piece?.type, square.piece?.player), square.type);
+    return new Square(Position.clone(square.position), PieceFactory.create(square.piece?.type, square.piece?.player), square.type);
   }
 }

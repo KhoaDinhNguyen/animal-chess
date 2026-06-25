@@ -28,6 +28,12 @@
       ],
       "@shared/*": [
         "../shared/*"
+      ],
+      "@api/*": [
+        "./api/*"
+      ],
+      "@context/*": [
+        "./context/*"
       ]
     }
   },

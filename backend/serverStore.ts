@@ -4,6 +4,7 @@ import { Game } from "@shared/game/core/Game"
 let io: Server;
 let games = new Map<number, Game>();
 
+let gameId = 0;
 export const setSocketServerInstance = (ioInstance: Server) => {
   io = ioInstance;
 }
@@ -12,8 +13,12 @@ export const getSocketServerInstsance = () => {
   return io;
 }
 
-export const addNewGame = (gameId: number, gameInstance: Game) => {
-  games.set(gameId, gameInstance);
+export const addNewGame = (): number => {
+  const newGameId = gameId++;
+
+  games.set(newGameId, new Game(newGameId));
+
+  return newGameId;
 }
 
 export const getGame = (gameId: number) => {

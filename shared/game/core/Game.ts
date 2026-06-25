@@ -1,5 +1,6 @@
 import { Board } from "./Board";
 import { Position } from "./Position";
+import { Move } from "./Move";
 
 export type PlayerNum = 0 | 1;
 
@@ -7,7 +8,7 @@ export type PlayerNum = 0 | 1;
 export class Game {
   public board: Board;
   public selectedSquare: Position | null;
-  public moveableSquares: Position[];
+  public moveableSquares: Move[];
   public player: PlayerNum;
   public gameId: number
 
@@ -37,8 +38,19 @@ export class Game {
     return newGame;
   }
 
+  unselectSquare() {
+    const newGame = new Game(this.gameId, this.player);
+
+    newGame.board = Board.clone(this.board);
+    newGame.moveableSquares = [];
+    newGame.selectedSquare = null;
+
+    console.log(newGame);
+    return newGame;
+  }
+
   move(from: Position, to: Position) {
-    console.log(this.gameId);
+    console.log(this.gameId, from, to);
     const newGame = new Game(this.gameId, this.nextPlayer());
 
     newGame.board = Board.clone(this.board);
@@ -46,6 +58,9 @@ export class Game {
     newGame.selectedSquare = null;
     newGame.moveableSquares = [];
 
+    // newGame.board.squares.forEach((row) => {
+    //   console.log(row);
+    // })
     return newGame;
   }
 
@@ -60,6 +75,9 @@ export class Game {
     newGame.moveableSquares = gameData.moveableSquares;
     newGame.player = gameData.player;
     newGame.selectedSquare = gameData.selectedSquare;
+
+    console.log("clone", newGame);
+
 
     return newGame;
   }
