@@ -9,10 +9,9 @@ export default function GameClient({ initialGame }: { initialGame: Game }) {
   const setGame = useGameStore((state) => state.setGame);
 
   useEffect(() => {
-    if (!game) {
-      setGame(initialGame);
-    }
-  }, [game, initialGame, setGame]);
+    setGame(initialGame);
+  }, [initialGame, setGame]);
 
+  // Check the game first
   return <Board board={(game ?? initialGame).board} />;
 }

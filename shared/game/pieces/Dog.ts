@@ -5,9 +5,6 @@ export class Dog extends Piece {
   constructor(player: PlayerNum) {
     super(player);
     this.type = "dog";
-  }
-
-  canCapture(piece: Piece): boolean {
-    return ["mouse", "cat", "dog"].includes(piece.type);
+    this.rank = 3;
   }
 }

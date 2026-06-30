@@ -1,7 +1,8 @@
 import { Square, SquareType } from "./Square";
 import { PieceType } from "../pieces/Piece";
-import { PieceFactory } from "../pieces/PieceFactory";
+// import { PieceFactory } from "../pieces/PieceFactory";
 import { Position } from "./Position";
+import { Piece } from "../pieces/Piece";
 
 /** @description Board class controls board's squares, and pieces */
 export class Board {
@@ -48,7 +49,7 @@ export class Board {
   assignPiece(positions: number[][], type: PieceType) {
     positions.forEach((position, idx) => {
       const [r, c] = position;
-      this.squares[r][c].piece = PieceFactory.create(type, idx == 0 ? 0 : 1);
+      this.squares[r][c].piece = new Piece(idx == 0 ? 0 : 1, type);
     })
   }
 
@@ -77,8 +78,8 @@ export class Board {
   }
 }
 
-const NUM_ROW: number = 9;
-const NUM_COL: number = 7;
+export const NUM_ROW: number = 9;
+export const NUM_COL: number = 7;
 
 // River's positions
 const RIVERS: number[][] =

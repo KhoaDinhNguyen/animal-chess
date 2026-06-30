@@ -1,5 +1,5 @@
 import { Piece } from "../pieces/Piece";
-import { PieceFactory } from "../pieces/PieceFactory";
+// import { PieceFactory } from "../pieces/PieceFactory";
 import { Position } from "./Position";
 
 export type SquareType = "plain" | "river" | "trap" | "den";
@@ -18,6 +18,6 @@ export class Square {
   static clone(square: Square): Square {
     if (square.piece == null) return new Square(square.position, null, square.type);
 
-    return new Square(Position.clone(square.position), PieceFactory.create(square.piece?.type, square.piece?.player), square.type);
+    return new Square(Position.clone(square.position), new Piece(square.piece.player, square.piece.type), square.type);
   }
 }

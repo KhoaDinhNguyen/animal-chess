@@ -12,11 +12,11 @@ export async function submitJoinGameForm(formData: FormData) {
 
 // Create game Action
 export async function submitCreateGameForm(formData: FormData) {
-  const gameType = formData.get("gameMode");
+  const gameMode = formData.get("gameMode");
 
 
-  if (gameType === "multi") {
-    const game = await createGame();
+  if (gameMode === "multi" || gameMode === "single") {
+    const game = await createGame(gameMode);
 
     if (game === null) {
       console.log("TODO");

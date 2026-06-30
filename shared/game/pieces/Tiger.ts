@@ -5,9 +5,6 @@ export class Tiger extends Piece {
   constructor(player: PlayerNum) {
     super(player);
     this.type = "tiger";
-  }
-
-  canCapture(piece: Piece): boolean {
-    return piece.type !== "elephant" && piece.type !== "lion";
+    this.rank = 6;
   }
 }

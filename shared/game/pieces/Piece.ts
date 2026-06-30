@@ -1,32 +1,49 @@
 import { Game, PlayerNum } from "../core/Game";
 import { Position } from "../core/Position";
 import { Square } from "../core/Square";
-import { TRAPS, DENS } from "../core/Board";
+import { TRAPS, DENS, NUM_COL, NUM_ROW } from "../core/Board";
 import { Move } from "../core/Move";
-
 
 export type PieceType = "mouse" | "elephant" | "lion" | "tiger" | "leopard" | "wolf" | "dog" | "cat"
 
-export abstract class Piece {
+const RANKS: Record<PieceType, number> = {
+  "mouse": 1,
+  "cat": 2,
+  "dog": 3,
+  "wolf": 4,
+  "leopard": 5,
+  "tiger": 6,
+  "lion": 7,
+  "elephant": 8
+}
+
+export class Piece {
   public type: PieceType;
   public player: PlayerNum;
-  public static directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+  public static directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  public rank: number;
 
-  constructor(player: PlayerNum) {
+  constructor(player: PlayerNum, type: PieceType) {
     this.player = player;
-    this.type = "mouse";
+    this.type = type;
+    this.rank = RANKS[type];
   }
 
+  /**
+   * Shows avaiable moves for an piece
+   * @param game current game state
+   * @param position current position
+   * @returns array Move object
+   */
   showMoves(game: Game, position: Position): Move[] {
     const board = game.board;
     const [r, c] = [position.row, position.col];
-    const [xAxis, yAxis] = [board.squares.length, board.squares[0].length];
 
     const moves: Move[] = [];
 
     for (const dir of Piece.directions) {
       const [nextR, nextC] = [r + dir[0], c + dir[1]];
-      if (nextR < 0 || nextR >= xAxis || nextC < 0 || nextC >= yAxis) continue;
+      if (nextR < 0 || nextR >= NUM_ROW || nextC < 0 || nextC >= NUM_COL) continue;
 
       const square = board.squares[nextR][nextC];
 
@@ -47,6 +64,7 @@ export abstract class Piece {
 
   /**
    * Every animals have the same plain moves
+   * @param currentSquare the current sit square
    * @param targetSquare the examined square
    * @param player the current player
    * @returns true if the animal can enter a plain
@@ -134,6 +152,7 @@ export abstract class Piece {
     for (const dir of directions) {
       // Target square
       const [nextR, nextC] = [row + dir[0], col + dir[1]];
+      if (nextR < 0 || nextC < 0 || nextR >= NUM_ROW || nextC >= NUM_COL) continue;
       let haveMouseInRiver = false;
 
       const [start, end] = jumpVertical ? [row, nextR] : [col, nextC];
@@ -160,7 +179,11 @@ export abstract class Piece {
 
     return jumpMoves;
   }
-  abstract canCapture(piece: Piece): boolean;
+  canCapture(piece: Piece) {
+    if (this.rank === 1 && piece.rank === 8) return true;
+    else if (this.rank === 8 && piece.rank === 1) return false;
+    return this.rank >= piece.rank;
+  }
 }
 
 // Jump coordinates
