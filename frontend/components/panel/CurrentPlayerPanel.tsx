@@ -1,6 +1,6 @@
 "use client";
 import { useGameStore } from "@/hooks/useGame";
-import { COLORS } from "../../app/page";
+import { COLORS } from "@/app/game/page";
 
 export default function CurrentPlayerPanel() {
   const playerTurn = useGameStore((state) => state.game?.player);

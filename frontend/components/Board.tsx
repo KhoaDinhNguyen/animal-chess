@@ -3,7 +3,7 @@
 import { Board as BoardClass } from "@shared/game/core/Board";
 import Square from "./Square";
 
-import { COLORS } from "../app/page";
+import { COLORS } from "@/app/game/page";
 
 interface BoardProps {
   board: BoardClass;

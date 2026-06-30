@@ -1,10 +1,10 @@
 "use client";
 
-import { Square as SquareClass, SquareType } from "@shared/game/core/Square";
+import { Square as SquareClass } from "@shared/game/core/Square";
 import { Piece as PieceClass, PieceType } from "@shared/game/pieces/Piece";
 import { useGameStore } from "@/hooks/useGame";
 // Import styles
-import { ANIMALS } from "@/app/page";
+import { ANIMALS } from "@/app/game/page";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Swords, WavesIcon, Crown, Fence } from "lucide-react";
 
 import { emitMovePiece } from "@/realTimeCommunication/socketConnection";

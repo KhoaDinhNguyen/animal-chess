@@ -1,6 +1,6 @@
 "use client";
 import { PIECE_INFO } from "@context/pieceInfo";
-import { COLORS, ANIMALS } from "../../app/page";
+import { ANIMALS, COLORS } from "@/app/game/page";
 import { getPieceIcon } from "../../components/Square";
 import { useGameStore } from "@/hooks/useGame";
 import { useState } from "react";
