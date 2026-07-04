@@ -1,4 +1,3 @@
-import { fetchGameByGameId } from "@/api/gameAPI";
 import GameClient from "@/components/GameClient";
 import GamePanel from "@/components/panel/GamePanel";
 import CurrentPlayerPanel from "@/components/panel/CurrentPlayerPanel";
@@ -6,10 +5,11 @@ import { notFound } from "next/navigation";
 import HelpButton from "@/components/button/HelpButton";
 import QuitButton from "@/components/button/QuitButton";
 import { Footer } from "@/app/page";
+import GameIdPanel from "@/components/panel/GameIdPanel";
+import { fetchGameByGameId } from "@database";
 
 export default async function GamePage({ params }: { params: Promise<{ gameId: string }> }) {
   const { gameId } = await params;
-
   const game = await fetchGameByGameId(gameId);
 
   if (game === null) {
@@ -36,10 +36,12 @@ export default async function GamePage({ params }: { params: Promise<{ gameId: s
 
       {/** Main */}
       <main className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-6 p-4 lg:p-6 overflow-auto">
-        <div className="grid grid-cols-2 gap-x-3" style={{ gridTemplateRows: "auto 1f" }}>
+        <div
+          className="grid gap-x-3"
+          style={{ gridTemplateRows: "repeat(2, auto)", gridTemplateColumns: "repeat(2, auto)" }}>
           <CurrentPlayerPanel />
-          <div></div>
-          <GameClient initialGame={game} />
+          <GameIdPanel />
+          <GameClient initialGame={game} gameId={gameId} />
           <div className="flex flex-col gap-3" style={{ width: 230, minWidth: 200 }}>
             <GamePanel />
           </div>
@@ -55,7 +57,7 @@ export default async function GamePage({ params }: { params: Promise<{ gameId: s
 function Header() {
   return (
     <header
-      className="relative z-10 flex items-center justify-between px-8 py-5 border-b"
+      className="relative z-50 flex items-center justify-between px-8 py-5 border-b"
       style={{ borderBottomColor: "#c8892a50" }}>
       <div className="flex items-center gap-3">
         <span className="text-2xl" style={{ fontFamily: "'Cinzel Decorative', serif", color: "#c8892a" }}>

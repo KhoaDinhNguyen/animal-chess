@@ -1,34 +1,43 @@
 import { Game } from "@shared/game/core/Game";
 import { create } from "zustand";
 import { Position } from "@shared/game/core/Position";
+import { defaultGameConfig, GameConfig } from "@shared/game/core/GameConfig";
+import { supabase } from "@/lib/supabase";
 
 interface GameStore {
-  game: Game | null
+  gameConfig: GameConfig,
+  gameId: string | null,
+  setGameConfig: (gameConfig: GameConfig) => void,
+  setGameId: (gameId: string | null) => void
   selectSquare: (position: Position) => void
-  setGame: (game: Game) => void
   unselectSquare: () => void
 }
 
-export const useGameStore = create<GameStore>((set) => ({
-  game: null,
+export const useGameStore = create<GameStore>((set, get) => ({
+  gameConfig: defaultGameConfig,
+  gameId: null,
+  setGameConfig(gameConfig: GameConfig) {
+    set({ gameConfig })
+  },
+  setGameId(gameId: string | null) {
+    set({ gameId })
+  },
+
+  // Select square
   selectSquare(position: Position) {
-    set(state => {
-      return ({
-        game: state.game !== null ? state.game.selectSquare(position) : null
-      })
-    });
+    const game = new Game(get().gameConfig);
+    const newGame = game.selectSquare(position);
+
+    set({ gameConfig: newGame.config })
+
   },
-  setGame(game: Game) {
-    set(state => ({
-      game: Game.clone(game)
-    }))
-  },
+
+  // Unselect square
   unselectSquare() {
-    set(state => {
-      console.log("unselect square at useGameStore", state.game?.unselectSquare());
-      return ({
-        game: state.game !== null ? state.game.unselectSquare() : null
-      })
-    })
+    const game = new Game(get().gameConfig);
+    const newGame = game.unselectSquare();
+
+    set({ gameConfig: newGame.config });
   },
+
 }))

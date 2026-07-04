@@ -1,4 +1,5 @@
-import { Game } from "../core/Game";
+import { Game, PlayerNum } from "../core/Game";
+import { Position } from "../core/Position";
 import { Piece } from "../pieces/Piece";
 
 /**
@@ -6,22 +7,93 @@ import { Piece } from "../pieces/Piece";
  * @param game current game state
  */
 export function evaluate(game: Game): number {
-  let score = 0;
 
   const squares = game.board.squares;
 
   // Check dens
-  if (squares[0][3].piece !== null) return 100;
-  else if (squares[8][3].piece !== null) return -100;
+  if (squares[0][3].piece !== null) return 1000000;
+  else if (squares[8][3].piece !== null) return -1000000;
 
+  let score = 0;
   // Sum of all pieces
-  squares.forEach(row => {
-    row.forEach(square => {
-      if (square.piece !== null) {
-        score = score + square.piece.rank * (square.piece.player === 1 ? -1 : 1);
-      }
-    })
-  });
+  score += evaluatePiece(game);
+  score += evaluatePosition(game);
+  score += evaluateTrapControl(game);
+  // score += evaluateSafety(game);
+  // score += evaluateAttack(game);
+  // score += evaluateMobility(game);
+  // score += evaluateDenPressure(game);
+
 
   return score;
+}
+
+/** Evalute game's score based on pieces */
+function evaluatePiece(game: Game): number {
+  let score = 0;
+  const squares = game.board.squares;
+
+  // Sum of all pieces
+  for (const row of squares) {
+    for (const square of row) {
+      const piece = square.piece;
+
+      if (!piece) continue;
+
+      const sign = getSign(piece.player);
+      score = score + piece.rank * sign * 100;
+
+    }
+  }
+
+  return score;
+}
+
+/** Evalute game's score based on position */
+function evaluatePosition(game: Game): number {
+  const MAX_DISTANCE = 11;
+  let score = 0;
+
+  const squares = game.board.squares;
+
+  // Sum of all position
+  for (const row of squares) {
+    for (const square of row) {
+      const piece = square.piece;
+
+      if (!piece) continue;
+      const sign = getSign(piece.player);
+
+      const progress = MAX_DISTANCE - square.getDistanceToEnemyDen(piece.player === 0 ? new Position(8, 3) : new Position(0, 3));
+      score += progress * sign * piece.rank;
+    }
+  }
+
+
+  return score;
+}
+
+function evaluateTrapControl(game: Game): number {
+  let score = 0;
+
+  const squares = game.board.squares;
+
+  for (const row of squares) {
+    for (const square of row) {
+      const piece = square.piece;
+
+      if (!piece) continue;
+
+      const sign = getSign(piece.player);
+
+      if (square.isEnemyTrap(piece.player)) {
+        score += 30 * sign;
+      }
+    }
+  }
+  return score;
+}
+
+function getSign(player: PlayerNum) {
+  return player === 0 ? 1 : -1;
 }

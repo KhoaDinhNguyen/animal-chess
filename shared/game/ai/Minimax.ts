@@ -4,7 +4,7 @@ import { Game } from "../core/Game";
 import { Move } from "../core/Move";
 
 export function minimax(depth: number, game: Game, alpha: number, beta: number): number {
-  if (depth <= 0 || game.isOver()) {
+  if (depth <= 0 || game.winner !== null) {
     return evaluate(game);
   }
 
@@ -50,6 +50,7 @@ export function findBestMoveForAI(game: Game, depth: number): Move | null {
   let bestScore = Number.POSITIVE_INFINITY;
 
   for (const move of action(game)) {
+
     const score = minimax(depth - 1, result(game, move), Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
 
     if (score < bestScore) {

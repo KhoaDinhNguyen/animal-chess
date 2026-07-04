@@ -2,19 +2,16 @@
 
 import { Board as BoardClass } from "@shared/game/core/Board";
 import Square from "./Square";
-
-import { COLORS } from "@/app/game/page";
+import { COLORS } from "@constants/colors";
+import { BOARD } from "@constants/board";
 
 interface BoardProps {
   board: BoardClass;
 }
 
-const ROWS = 9;
-const COLS = 7;
-const CELL = 54;
-
 export default function Board(props: BoardProps) {
   const { board } = props;
+  const { COLS_NUM, ROWS_NUM, CELL_SIZE } = BOARD;
 
   return (
     <div className="shrink-0">
@@ -32,8 +29,8 @@ export default function Board(props: BoardProps) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${COLS}, ${CELL}px)`,
-          gridTemplateRows: `repeat(${ROWS}, ${CELL}px)`,
+          gridTemplateColumns: `repeat(${COLS_NUM}, ${CELL_SIZE}px)`,
+          gridTemplateRows: `repeat(${ROWS_NUM}, ${CELL_SIZE}px)`,
           border: "2px solid rgba(200,137,42,0.35)",
           borderRadius: "3px",
           gap: "1px",

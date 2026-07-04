@@ -4,11 +4,11 @@ import { Square as SquareClass } from "@shared/game/core/Square";
 import { Piece as PieceClass, PieceType } from "@shared/game/pieces/Piece";
 import { useGameStore } from "@/hooks/useGame";
 // Import styles
-import { ANIMALS } from "@/app/game/page";
+import { ANIMALS } from "@constants/pieces";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Swords, WavesIcon, Crown, Fence } from "lucide-react";
 
-import { emitMovePiece } from "@/realTimeCommunication/socketConnection";
 import { Move } from "@shared/game/core/Move";
+import { makeMove } from "@/lib/services";
 
 interface SquareProps {
   square: SquareClass;
@@ -25,16 +25,17 @@ export default function Square(props: SquareProps) {
   // Handle action
   const selectSquare = useGameStore((state) => state.selectSquare);
   const unselectSquare = useGameStore((state) => state.unselectSquare);
-  const game = useGameStore((state) => state.game);
+  const gameConfig = useGameStore((state) => state.gameConfig);
+  const gameId = useGameStore((s) => s.gameId);
 
-  if (game == null) return <></>;
+  if (!gameConfig || !gameId) return <></>;
 
   // Find moveable square
-  const moveable = game.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to));
+  const moveable = gameConfig.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to));
   const isCapture = moveable !== undefined && square.piece !== null;
 
-  const onClickSquare = () => {
-    const selected = game.selectedSquare;
+  const onClickSquare = async () => {
+    const selected = gameConfig.selectedSquare;
 
     /** If the game selected square is null, select it */
     if (selected === null) {
@@ -44,7 +45,7 @@ export default function Square(props: SquareProps) {
 
     /** If the game selected square is not null, and it is movable, then move it */
     if (moveable !== undefined) {
-      emitMovePiece(game.gameId, selected, square.position);
+      makeMove(gameId, gameConfig, new Move(selected, square.position));
       return;
     }
 
@@ -57,7 +58,7 @@ export default function Square(props: SquareProps) {
     selectSquare(square.position);
   };
 
-  const isSelected = game.selectedSquare === null ? false : game.selectedSquare.equal(square.position);
+  const isSelected = gameConfig.selectedSquare === null ? false : gameConfig.selectedSquare.equal(square.position);
 
   return (
     <div
@@ -136,7 +137,7 @@ function MoveDirection({ move }: { move: Move }) {
   const { dr, dc } = move;
 
   return (
-    <div className="z-50">
+    <div className="z-20">
       {dr === -1 && <ArrowUp size={19} style={{ color: "rgba(200,137,42,0.9)" }} />}
       {dr === 1 && <ArrowDown size={19} style={{ color: "rgba(200,137,42,0.9)" }} />}
       {dc === -1 && dr === 0 && <ArrowLeft size={19} style={{ color: "rgba(200,137,42,0.9)" }} />}

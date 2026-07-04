@@ -1,4 +1,5 @@
-import { Game, PlayerNum } from "../core/Game";
+import { Game } from "../core/Game";
+import { PlayerNum } from "../core/GameConfig";
 import { Position } from "../core/Position";
 import { Square } from "../core/Square";
 import { TRAPS, DENS, NUM_COL, NUM_ROW } from "../core/Board";

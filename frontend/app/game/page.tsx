@@ -1,15 +1,8 @@
 import JoinGameButton from "@/components/button/JoinGameButton";
 import CreateGameButton from "@/components/button/CreateGameButton";
 import GameInstructionButton from "@/components/button/GameInstructionButton";
+import { ANIMALS } from "@constants/pieces";
 import { Footer } from "../page";
-
-const P1_COLOR = "#0077b6";
-const P2_COLOR = "#ef233c";
-
-export const COLORS = {
-  P1_COLOR,
-  P2_COLOR,
-};
 
 // Game Homepage
 export default function GameHomePage() {
@@ -70,7 +63,7 @@ function Header() {
         </span>
       </div>
       <nav className="hidden md:flex items-center gap-6">
-        <a
+        {/* <a
           href="#"
           className="text-sm tracking-widest uppercase transition-colors hover:text-primary"
           style={{ fontFamily: "'Cinzel', serif", color: "#8fa88a" }}>
@@ -87,7 +80,7 @@ function Header() {
           className="text-sm tracking-widest uppercase transition-colors hover:text-primary"
           style={{ fontFamily: "'Cinzel', serif", color: "#8fa88a" }}>
           About
-        </a>
+        </a> */}
       </nav>
     </header>
   );
@@ -127,17 +120,6 @@ function HeroTitle() {
     </div>
   );
 }
-
-export const ANIMALS = [
-  { rank: 8, name: "Elephant", symbol: "🐘" },
-  { rank: 7, name: "Lion", symbol: "🦁" },
-  { rank: 6, name: "Tiger", symbol: "🐯" },
-  { rank: 5, name: "Leopard", symbol: "🐆" },
-  { rank: 4, name: "Wolf", symbol: "🐺" },
-  { rank: 3, name: "Dog", symbol: "🐕" },
-  { rank: 2, name: "Cat", symbol: "🐱" },
-  { rank: 1, name: "Mouse", symbol: "🐀" },
-];
 
 function AnimalStrip() {
   return (

@@ -1,26 +1,24 @@
 import { Board } from "./Board";
 import { Position } from "./Position";
 import { Move } from "./Move";
+import { GameConfig } from "./GameConfig";
+import { PlayerNum, } from "./GameConfig";
+import { Square } from "./Square";
 
-export type PlayerNum = 0 | 1;
-export type GameMode = "single" | "multi"
 
 // Game class controls 
 export class Game {
-  public board: Board;
-  public selectedSquare: Position | null;
-  public moveableSquares: Move[];
-  public player: PlayerNum;
-  public gameId: number;
-  public mode: GameMode;
+  public config: GameConfig;
 
-  constructor(gameId: number, mode: GameMode, gameData?: Game) {
-    this.board = new Board();
-    this.selectedSquare = null;
-    this.moveableSquares = [];
-    this.player = 0;
-    this.gameId = gameId;
-    this.mode = mode;
+  constructor(config: Partial<GameConfig> = {}) {
+    this.config = {
+      board: config.board ?? new Board(),
+      selectedSquare: config.selectedSquare ?? null,
+      moveableSquares: config.moveableSquares ?? [],
+      player: config.player ?? 0,
+      mode: config.mode ?? "single",
+      winner: config.winner ?? null
+    };
   }
 
   /**
@@ -66,20 +64,25 @@ export class Game {
     game.player = this.nextPlayer();
     game.selectedSquare = null;
     game.moveableSquares = [];
+    game.checkGameOver();
 
     return game;
   }
 
   nextPlayer() {
-    return this.player == 1 ? 0 : 1
+    return this.config.player == 1 ? 0 : 1
   }
 
   /**
    * Check whether the game is over
-   * @returns boolean
    */
-  isOver(): boolean {
-    return this.board.squares[0][3].piece !== null || this.board.squares[8][3].piece !== null;
+  checkGameOver(): void {
+    if (this.board.squares[0][3].piece !== null) {
+      this.winner = 0;
+    }
+    else if (this.board.squares[0][3].piece !== null) {
+      this.winner = 1;
+    }
   }
 
 
@@ -88,14 +91,64 @@ export class Game {
    * @param gameData current game data
    * @returns Game object
    */
-  static clone(gameData: Game) {
-    const game = new Game(gameData.gameId, gameData.mode);
+  static clone(data: Game | GameConfig) {
+    const config = data instanceof Game ? data.config : data;
 
-    game.board = Board.clone(gameData.board);
-    game.moveableSquares = [...gameData.moveableSquares];
-    game.player = gameData.player;
-    game.selectedSquare = gameData.selectedSquare;
-
-    return game;
+    return new Game({
+      board: Board.clone(config.board),
+      selectedSquare: config.selectedSquare ? Position.clone(config.selectedSquare) : null,
+      moveableSquares: config.moveableSquares.map(Move.clone),
+      player: config.player,
+      mode: config.mode,
+      winner: config.winner
+    });
   }
+
+
+  // get-set board
+  get board() { return this.config.board };
+  set board(board: Board) { this.config.board = board };
+
+  // get-set player
+  get player() { return this.config.player };
+  set player(player: PlayerNum) { this.config.player = player };
+
+  // get-set winner
+  get winner() { return this.config.winner };
+  set winner(winner: PlayerNum | null) { this.config.winner = winner };
+
+  // get-set selected square
+  get selectedSquare() { return this.config.selectedSquare };
+  set selectedSquare(pos: Position | null) { this.config.selectedSquare = pos };
+
+  // get-set moveable squares
+  get moveableSquares() { return this.config.moveableSquares };
+  set moveableSquares(move: Move[]) { this.config.moveableSquares = move };
+
+  // get mode
+  get mode() { return this.config.mode };
+  //serialization
+
+  /** Convert game instance to JSON data */
+  toJSON() {
+    return {
+      board: this.board,
+      current_turn: this.player,
+      winner: this.winner,
+      mode: this.mode
+    }
+  }
+
+
+  static fromJSON(data: any): GameConfig {
+    return {
+      board: data.board,
+      player: data.current_turn,
+      winner: data.winner,
+      mode: data.mode,
+      selectedSquare: null,
+      moveableSquares: []
+    }
+  }
+
 }

@@ -19,8 +19,8 @@ export default function Modal(props: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center p-4"
-      style={{ background: "rbga(5, 12, 7, 0.85)", backdropFilter: "blur(6px)", zIndex: "100" }}
+      className="fixed inset-0 flex items-center justify-center p-4 z-50"
+      style={{ background: "rgba(5, 12, 7, 0.85)", backdropFilter: "blur(6px)" }}
       onClick={onClick}>
       {children}
     </div>

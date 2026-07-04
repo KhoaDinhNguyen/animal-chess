@@ -1,21 +1,22 @@
 "use client";
-import { PIECE_INFO } from "@context/pieceInfo";
-import { ANIMALS, COLORS } from "@/app/game/page";
+import { PIECE_INFO } from "@/constants/pieces";
+import { COLORS } from "@constants/colors";
+import { ANIMALS } from "@constants/pieces";
 import { getPieceIcon } from "../../components/Square";
 import { useGameStore } from "@/hooks/useGame";
 import { useState } from "react";
 
 // --- Piece Info Panel -----------------------
 export default function PieceInfoPanel() {
-  const game = useGameStore((state) => state.game);
+  const gameConfig = useGameStore((state) => state.gameConfig);
   const [showInfo, setShowInfo] = useState(false);
 
-  if (game === null) return <></>;
+  if (gameConfig === null) return <></>;
 
   let selectedPiece = null;
 
-  if (game.selectedSquare !== null) {
-    const square = game.board.squares[game.selectedSquare.row][game.selectedSquare.col];
+  if (gameConfig.selectedSquare !== null) {
+    const square = gameConfig.board.squares[gameConfig.selectedSquare.row][gameConfig.selectedSquare.col];
     if (square.piece !== null) selectedPiece = square.piece;
   }
 
@@ -82,6 +83,7 @@ export default function PieceInfoPanel() {
               </div>
               {/** Animal's trait */}
               <div className="space-y-2.5">
+                {/** 1. Animal's movement */}
                 <div>
                   <p
                     className="text-xs tracking-widest uppercase mb-0.5"
@@ -92,6 +94,7 @@ export default function PieceInfoPanel() {
                     {PIECE_INFO[animal.rank].movement}
                   </p>
                 </div>
+                {/** 2. Animal's special movement */}
                 <div>
                   <p
                     className="text-xs tracking-widest uppercase mb-0.5"

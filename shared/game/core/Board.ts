@@ -4,7 +4,7 @@ import { PieceType } from "../pieces/Piece";
 import { Position } from "./Position";
 import { Piece } from "../pieces/Piece";
 
-/** @description Board class controls board's squares, and pieces */
+/** Board class controls board's squares, and pieces */
 export class Board {
   // Board consits multiple squares
   public squares: Square[][];

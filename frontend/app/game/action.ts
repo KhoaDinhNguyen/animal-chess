@@ -1,6 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
-import { createGame } from "@/api/gameAPI";
+import { createGame } from "@/lib/database";
 
 // Join game Action
 export async function submitJoinGameForm(formData: FormData) {
@@ -14,19 +14,17 @@ export async function submitJoinGameForm(formData: FormData) {
 export async function submitCreateGameForm(formData: FormData) {
   const gameMode = formData.get("gameMode");
 
+  // check whether the game mode correct
+  if (gameMode !== "multi" && gameMode !== "single") return;
 
-  if (gameMode === "multi" || gameMode === "single") {
-    const game = await createGame(gameMode);
+  const data = await createGame(gameMode);
 
-    if (game === null) {
-      console.log("TODO");
-    }
-    else {
-      redirect(`/game/${game.gameId}`)
-    }
+  if (data === null) {
+    console.error("Cannot create game");
+    return;
   }
-  else {
-    console.log("TODO");
-  }
+
+  console.log(data);
+  redirect(`/game/${data.id}`)
 
 }

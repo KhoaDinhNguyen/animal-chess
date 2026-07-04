@@ -1,9 +1,9 @@
 "use client";
 import { useGameStore } from "@/hooks/useGame";
-import { COLORS } from "@/app/game/page";
+import { COLORS } from "@constants/colors";
 
 export default function CurrentPlayerPanel() {
-  const playerTurn = useGameStore((state) => state.game?.player);
+  const playerTurn = useGameStore((state) => state.gameConfig.player);
 
   const turnColor = playerTurn === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 

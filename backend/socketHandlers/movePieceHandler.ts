@@ -21,20 +21,16 @@ export const movePieceHandler = (data: any) => {
     updateGame({ gameId });
     game = getGame(gameId);
 
-    if (game !== undefined && game.mode === "single" && game.player === 1) {
+    if (game && game.mode === "single" && game.player === 1 && game.winner === null) {
+      const move = findBestMoveForAI(game, 5);
 
-      if (game !== undefined) {
-        const move = findBestMoveForAI(game, 5);
+      if (move !== null) {
+        nextGameState = game.move(move.from, move.to);
 
-        if (move !== null) {
-          nextGameState = game.move(move.from, move.to);
-
-          console.log(move);
-          updateGameDatabase(gameId, nextGameState);
-          updateGame({ gameId });
-        }
+        console.log(move);
+        updateGameDatabase(gameId, nextGameState);
+        updateGame({ gameId });
       }
-
     }
 
   }
