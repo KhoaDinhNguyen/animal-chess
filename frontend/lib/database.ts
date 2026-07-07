@@ -63,17 +63,25 @@ export async function assignRoleToGame(gameId: string, token: string): Promise<"
   if (game.player_1_token === token) return "player1";
   if (game.player_2_token === token) return "player2";
 
-  const { data: p1Data } = await supabase.from("games").update({ player_1_token: token }).eq("id", gameId).is("player_1_token", null).select().single();
-
+  const { data: p1Data } = await supabase.from("games").update({ player_1_token: token }).eq("id", gameId).is("player_1_token", null).select();
   /** Player 1 checking */
-  if (p1Data) return "player1";
+  if (p1Data?.length === 1) return "player1";
 
   /** Plyer 2 checking */
   if (game.mode === "multi") {
-    const { data: p2Data } = await supabase.from("games").update({ player_2_token: token }).eq("id", gameId).is("player_2_token", null).select().single();
-
-    if (p2Data) return "player2";
+    const { data: p2Data } = await supabase.from("games").update({ player_2_token: token }).eq("id", gameId).neq("player_1_token", token).is("player_2_token", null).select();
+    if (p2Data?.length === 1) return "player2";
   }
+
+  const { data: latestGame } = await supabase
+    .from("games")
+    .select("player_1_token, player_2_token, mode")
+    .eq("id", gameId)
+    .single();
+
+  // Someone else may have claimed a slot 
+  if (latestGame?.player_1_token === token) return "player1";
+  if (latestGame?.player_2_token === token) return "player2";
 
   return "spectator";
 }

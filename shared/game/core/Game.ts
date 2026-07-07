@@ -15,7 +15,8 @@ export class Game {
       moveableSquares: config.moveableSquares ?? [],
       player: config.player ?? 0,
       mode: config.mode ?? "single",
-      winner: config.winner ?? null
+      winner: config.winner ?? null,
+      lastMove: config.lastMove ?? null
     };
   }
 
@@ -62,6 +63,7 @@ export class Game {
     game.player = this.nextPlayer();
     game.selectedSquare = null;
     game.moveableSquares = [];
+    game.lastMove = new Move(from, to);
     game.checkGameOver();
 
     return game;
@@ -98,7 +100,8 @@ export class Game {
       moveableSquares: config.moveableSquares.map(Move.clone),
       player: config.player,
       mode: config.mode,
-      winner: config.winner
+      winner: config.winner,
+      lastMove: config.lastMove ? Move.clone(config.lastMove) : null
     });
   }
 
@@ -123,6 +126,10 @@ export class Game {
   get moveableSquares() { return this.config.moveableSquares };
   set moveableSquares(move: Move[]) { this.config.moveableSquares = move };
 
+  // get-set last move
+  get lastMove() { return this.config.lastMove };
+  set lastMove(lastMove: Move | null) { this.config.lastMove = lastMove; }
+
   // get mode
   get mode() { return this.config.mode };
   //serialization
@@ -133,7 +140,8 @@ export class Game {
       board: this.board,
       current_turn: this.player,
       winner: this.winner,
-      mode: this.mode
+      mode: this.mode,
+      last_move: this.lastMove
     }
   }
 
@@ -145,7 +153,8 @@ export class Game {
       winner: data.winner,
       mode: data.mode,
       selectedSquare: null,
-      moveableSquares: []
+      moveableSquares: [],
+      lastMove: data.last_move
     }
   }
 

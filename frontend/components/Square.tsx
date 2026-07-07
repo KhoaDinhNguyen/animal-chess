@@ -47,6 +47,17 @@ export default function Square({ square, role }: { square: SquareClass; role: st
 
   const isCapture = moveable !== undefined && square.piece !== null;
 
+  const isLastMoveFrom = gameConfig.lastMove
+    ? square.position.col === gameConfig.lastMove.from.col && square.position.row === gameConfig.lastMove.from.row
+    : null;
+
+  const isLastMoveTo = gameConfig.lastMove
+    ? square.position.col === gameConfig.lastMove.to.col && square.position.row === gameConfig.lastMove.to.row
+    : null;
+
+  if (isLastMoveFrom) {
+    console.log(square.position, isLastMoveFrom);
+  }
   const onClickSquare = async () => {
     const selected = gameConfig.selectedSquare;
 
@@ -88,6 +99,12 @@ export default function Square({ square, role }: { square: SquareClass; role: st
       {!piece && <SquareLabel square={square} />}
       {piece && <Piece piece={piece} select={isSelected} isCapture={isCapture} />}
       {moveable && !piece && <MoveDirection move={moveable} />}
+      {isLastMoveFrom && (
+        <LastPositionFrom color={gameConfig.player === 0 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
+      )}
+      {isLastMoveTo && (
+        <LastPositionTo color={gameConfig.player === 0 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
+      )}
     </div>
   );
 }
@@ -159,6 +176,47 @@ function MoveDirection({ move }: { move: Move }) {
   );
 }
 
+// --- Last Position From -------------------------
+function LastPositionFrom({ color }: { color: string }) {
+  return (
+    <div
+      className="absolute pointer-events-none"
+      style={{ inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {/* Hollow ring — "departed from here" */}
+      <div
+        style={{
+          width: 14,
+          height: 14,
+          borderRadius: "50%",
+          border: `2.5px solid ${color}`,
+          background: "transparent",
+          boxShadow: `0 0 6px ${color}90`,
+        }}
+      />
+    </div>
+  );
+}
+
+/// ---- Last Position To --------------------------
+function LastPositionTo({ color }: { color: string }) {
+  return (
+    <div
+      className="absolute pointer-events-none"
+      style={{ inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {/* Filled dot — "landed here" */}
+      <div
+        style={{
+          width: 10,
+          height: 10,
+          borderRadius: "50%",
+          background: `${color}`,
+          boxShadow: "0 0 8px rgba(251,191,36,0.6), 0 0 2px rgba(251,191,36,1)",
+        }}
+      />
+    </div>
+  );
+}
+/// ---- Piece icon ------------------------------
 export function getPieceIcon(type: PieceType) {
   for (const item of ANIMALS) {
     if (item.name.toLowerCase() === type) return item.symbol;

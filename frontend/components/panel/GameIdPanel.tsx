@@ -76,7 +76,7 @@ function GameURLButton({ gameId }: { gameId: string }) {
       onMouseLeave={(e) => (e.currentTarget.style.background = copied ? "#a06a18" : "#c8892a")}>
       <span className="flex items-center gap-1.5">
         <Link2 size={11} />
-        Copy Game URL
+        Copy Game Link
       </span>
       {copied ? (
         <Check size={11} style={{ color: "#ffffff" }} />

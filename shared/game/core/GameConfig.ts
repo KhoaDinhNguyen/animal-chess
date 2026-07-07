@@ -12,6 +12,7 @@ export interface GameConfig {
   player: PlayerNum;
   mode: GameMode;
   winner: PlayerNum | null;
+  lastMove: Move | null
 }
 
 export const defaultGameConfig: GameConfig = {
@@ -20,5 +21,6 @@ export const defaultGameConfig: GameConfig = {
   moveableSquares: [],
   player: 0,
   mode: "single",
-  winner: null
+  winner: null,
+  lastMove: null
 }

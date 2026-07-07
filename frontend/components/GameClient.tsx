@@ -26,7 +26,9 @@ export default function GameClient({ gameData, gameId }: { gameData: any; gameId
   useEffect(() => {
     async function checkPlayerToken() {
       let token = await getOrCreateCookie(PLAYER_TOKEN);
-      setRole(await assignRoleToGame(gameId, token));
+      const computedRole = await assignRoleToGame(gameId, token);
+
+      setRole(computedRole);
     }
 
     checkPlayerToken();
