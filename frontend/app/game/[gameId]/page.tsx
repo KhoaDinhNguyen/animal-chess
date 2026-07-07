@@ -10,9 +10,9 @@ import { fetchGameByGameId } from "@database";
 
 export default async function GamePage({ params }: { params: Promise<{ gameId: string }> }) {
   const { gameId } = await params;
-  const game = await fetchGameByGameId(gameId);
+  const data = await fetchGameByGameId(gameId);
 
-  if (game === null) {
+  if (data === null) {
     notFound();
   }
 
@@ -37,11 +37,11 @@ export default async function GamePage({ params }: { params: Promise<{ gameId: s
       {/** Main */}
       <main className="flex-1 flex flex-col lg:flex-row items-start justify-center gap-6 p-4 lg:p-6 overflow-auto">
         <div
-          className="grid gap-x-3"
+          className="grid gap-x-3 gap-y-3"
           style={{ gridTemplateRows: "repeat(2, auto)", gridTemplateColumns: "repeat(2, auto)" }}>
           <CurrentPlayerPanel />
           <GameIdPanel />
-          <GameClient initialGame={game} gameId={gameId} />
+          <GameClient gameData={data} gameId={gameId} />
           <div className="flex flex-col gap-3" style={{ width: 230, minWidth: 200 }}>
             <GamePanel />
           </div>

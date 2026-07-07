@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Footer } from "@/app/page";
 
 // Not found page
-export default function NotFoundGame({ gameId }: { gameId: string }) {
+export default function NotFoundGame() {
   const router = useRouter();
 
   return (

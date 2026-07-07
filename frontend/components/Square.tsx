@@ -3,35 +3,48 @@
 import { Square as SquareClass } from "@shared/game/core/Square";
 import { Piece as PieceClass, PieceType } from "@shared/game/pieces/Piece";
 import { useGameStore } from "@/hooks/useGame";
-// Import styles
+import { Move } from "@shared/game/core/Move";
+import { Game } from "@shared/game/core/Game";
+
+import { makeMove } from "@/lib/services";
+// Import constant
+import { COLORS } from "@constants/colors";
+import { BOARD } from "@constants/board";
 import { ANIMALS } from "@constants/pieces";
+
+// Import Icon
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Swords, WavesIcon, Crown, Fence } from "lucide-react";
 
-import { Move } from "@shared/game/core/Move";
-import { makeMove } from "@/lib/services";
-
-interface SquareProps {
-  square: SquareClass;
-}
-
-const CELL = 54;
-const P1_COLOR = "#0077b6";
-const P2_COLOR = "#ef233c";
-
-export default function Square(props: SquareProps) {
-  const { square } = props;
+export default function Square({ square, role }: { square: SquareClass; role: string }) {
   const { piece } = square;
 
   // Handle action
-  const selectSquare = useGameStore((state) => state.selectSquare);
-  const unselectSquare = useGameStore((state) => state.unselectSquare);
   const gameConfig = useGameStore((state) => state.gameConfig);
+  const setGameConfig = useGameStore((s) => s.setGameConfig);
   const gameId = useGameStore((s) => s.gameId);
 
   if (!gameConfig || !gameId) return <></>;
 
   // Find moveable square
-  const moveable = gameConfig.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to));
+  // console.log(
+  //   (piece?.player === 0 && role === "player1") || (piece?.player === 1 && role === "player2"),
+  //   role,
+  //   piece?.player,
+  //   gameConfig.moveableSquares,
+  //   gameConfig.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to)),
+  // );
+  const selectedPiece = gameConfig.selectedSquare
+    ? gameConfig.board.squares[gameConfig.selectedSquare.row][gameConfig.selectedSquare.col].piece
+    : null;
+
+  const isRightPlayer = selectedPiece
+    ? (selectedPiece.player === 0 && role === "player1") || (selectedPiece.player === 1 && role === "player2")
+    : false;
+
+  const moveable = isRightPlayer
+    ? gameConfig.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to))
+    : undefined;
+
   const isCapture = moveable !== undefined && square.piece !== null;
 
   const onClickSquare = async () => {
@@ -39,7 +52,7 @@ export default function Square(props: SquareProps) {
 
     /** If the game selected square is null, select it */
     if (selected === null) {
-      selectSquare(square.position);
+      setGameConfig(Game.clone(gameConfig).selectSquare(square.position).config);
       return;
     }
 
@@ -51,11 +64,11 @@ export default function Square(props: SquareProps) {
 
     if (square.position.equal(selected)) {
       /** If the selected square is the current position, unselect it */
-      unselectSquare();
+      setGameConfig(Game.clone(gameConfig).unselectSquare().config);
       return;
     }
 
-    selectSquare(square.position);
+    setGameConfig(Game.clone(gameConfig).selectSquare(square.position).config);
   };
 
   const isSelected = gameConfig.selectedSquare === null ? false : gameConfig.selectedSquare.equal(square.position);
@@ -64,8 +77,8 @@ export default function Square(props: SquareProps) {
     <div
       className="relative flex items-center justify-center cursor-pointer select-non"
       style={{
-        width: CELL,
-        height: CELL,
+        width: BOARD.CELL_SIZE,
+        height: BOARD.CELL_SIZE,
         background: getCellBg(square),
         outline: moveable ? `2px solid ${isCapture ? "rgba(184,52,27,0.7)" : "rgba(200,137,42,0.55)"}` : undefined,
         outlineOffset: "-1px",
@@ -99,21 +112,21 @@ function SquareLabel({ square }: { square: SquareClass }) {
 }
 // --- Piece component ---------------------------
 function Piece({ piece, select, isCapture }: { piece: PieceClass; select: boolean; isCapture: boolean }) {
-  const playerColor = piece.player === 0 ? P1_COLOR : P2_COLOR;
+  const playerColor = piece.player === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 
   return (
     <div
       className="relative flex items-center justify-center rounded-full transition-all duration-150 select-none"
       style={{
-        width: CELL - 8,
-        height: CELL - 8,
+        width: BOARD.CELL_SIZE - 8,
+        height: BOARD.CELL_SIZE - 8,
         background: `${playerColor}50`,
         border: select
           ? `2px solid ${playerColor}`
           : isCapture
             ? "2px solid rgba(184,52,27,0.75)"
             : `1px solid ${playerColor}55`,
-        fontSize: CELL * 0.44,
+        fontSize: BOARD.CELL_SIZE * 0.44,
         lineHeight: 1,
         boxShadow: select ? `0 0 14px ${playerColor}70` : "none",
         transform: select ? "scale(1.08)" : "scale(1)",
@@ -157,8 +170,8 @@ function getCellBg(square: SquareClass) {
   const [r, c] = [square.position.row, square.position.col];
 
   if (square.type === "den") {
-    if (r == 0) return `${P2_COLOR}80`;
-    return `${P1_COLOR}80`;
+    if (r == 0) return `${COLORS.P2_COLOR}80`;
+    return `${COLORS.P1_COLOR}80`;
   } else if (square.type === "river")
     return "#0b1e40"; //"#023e8a"
   else if (square.type === "trap") return "#260701";

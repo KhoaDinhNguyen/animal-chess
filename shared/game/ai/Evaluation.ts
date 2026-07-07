@@ -1,6 +1,6 @@
-import { Game, PlayerNum } from "../core/Game";
+import { Game } from "../core/Game";
+import { PlayerNum } from "../core/GameConfig";
 import { Position } from "../core/Position";
-import { Piece } from "../pieces/Piece";
 
 /**
  * Evaluate the score of the game (assuming that bot is minimize player)

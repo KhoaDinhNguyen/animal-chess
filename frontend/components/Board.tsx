@@ -7,10 +7,11 @@ import { BOARD } from "@constants/board";
 
 interface BoardProps {
   board: BoardClass;
+  role: string;
 }
 
 export default function Board(props: BoardProps) {
-  const { board } = props;
+  const { board, role } = props;
   const { COLS_NUM, ROWS_NUM, CELL_SIZE } = BOARD;
 
   return (
@@ -37,7 +38,7 @@ export default function Board(props: BoardProps) {
           background: "rgba(200,137,42,0.12)",
         }}>
         {board.squares.flatMap((row, rowIdx) =>
-          row.map((square, colIdx) => <Square key={`${rowIdx}_${colIdx}`} square={square} />),
+          row.map((square, colIdx) => <Square role={role} key={`${rowIdx}_${colIdx}`} square={square} />),
         )}
       </div>
 

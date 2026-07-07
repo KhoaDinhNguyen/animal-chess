@@ -3,8 +3,6 @@ import { Position } from "./Position";
 import { Move } from "./Move";
 import { GameConfig } from "./GameConfig";
 import { PlayerNum, } from "./GameConfig";
-import { Square } from "./Square";
-
 
 // Game class controls 
 export class Game {

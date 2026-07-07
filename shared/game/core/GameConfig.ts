@@ -2,7 +2,7 @@ import { Board } from "./Board";
 import { Position } from "./Position";
 import { Move } from "./Move";
 
-export type PlayerNum = 0 | 1;
+export type PlayerNum = 0 | 1 | 2;
 export type GameMode = "single" | "multi"
 
 export interface GameConfig {
