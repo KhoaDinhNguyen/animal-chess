@@ -19,12 +19,12 @@ const registerSocketServer = (server: HttpServer) => {
   io.on("connect", (socket) => {
     console.log("user connect ", socket.id);
 
-    if (getGame(0) == null) addNewGame();
+    if (getGame(0) == null) addNewGame("single");
 
-    updateGame({ gameId: 0 });
+    // updateGame({ gameId: 0 });
 
     socket.on("move-piece", (data) => {
-      console.log("move piece", data);
+      // console.log("move piece", data);
       movePieceHandler(data);
     })
 

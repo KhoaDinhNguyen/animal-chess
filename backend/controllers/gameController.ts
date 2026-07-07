@@ -4,6 +4,7 @@ import { getGame, addNewGame } from "../serverStore";
 async function fetchGameByGameId(req: Request, res: Response, next: NextFunction) {
   const { gameId } = req.params;
 
+  console.log(gameId);
   try {
     const game = getGame(Number(gameId));
 
@@ -20,8 +21,10 @@ async function fetchGameByGameId(req: Request, res: Response, next: NextFunction
 }
 
 async function createGame(req: Request, res: Response, next: NextFunction) {
+  const { mode } = req.body;
+
   try {
-    const newGameId = addNewGame();
+    const newGameId = addNewGame(mode);
     const game = getGame(newGameId);
 
     if (game == undefined) {

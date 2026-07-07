@@ -1,4 +1,4 @@
-import { ANIMALS } from "@/app/page";
+import { ANIMALS } from "@constants/pieces";
 import Modal from "./Modal";
 import { X } from "lucide-react";
 

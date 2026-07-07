@@ -1,5 +1,5 @@
 import { ArrowUp, Swords } from "lucide-react";
-import { COLORS } from "../../app/page";
+import { COLORS } from "@constants/colors";
 
 export function LegendPanel() {
   return (

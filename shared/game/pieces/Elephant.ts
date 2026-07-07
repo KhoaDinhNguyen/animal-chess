@@ -1,13 +1,10 @@
-import { Piece } from "./Piece";
-import { PlayerNum } from "../core/Game";
+// import { Piece } from "./Piece";
+// import { PlayerNum } from "../core/Game";
 
-export class Elephant extends Piece {
-  constructor(player: PlayerNum) {
-    super(player);
-    this.type = "elephant";
-  }
-
-  canCapture(piece: Piece): boolean {
-    return piece.type != "mouse";
-  }
-}
+// export class Elephant extends Piece {
+//   constructor(player: PlayerNum) {
+//     super(player);
+//     this.type = "elephant";
+//     this.rank = 8;
+//   }
+// }

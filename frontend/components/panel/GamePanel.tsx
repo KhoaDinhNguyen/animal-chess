@@ -3,7 +3,7 @@ import { LegendPanel } from "./LegendPanel";
 
 export default function GamePanel() {
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <PieceInfoPanel />
       <LegendPanel />
     </div>

@@ -29,11 +29,14 @@
       "@shared/*": [
         "../shared/*"
       ],
-      "@api/*": [
-        "./api/*"
+      "@constants/*": [
+        "./constants/*"
       ],
-      "@context/*": [
-        "./context/*"
+      "@interface/*": [
+        "../shared/types/*"
+      ],
+      "@database": [
+        "./lib/database.ts"
       ]
     }
   },

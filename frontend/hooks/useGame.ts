@@ -1,34 +1,20 @@
-import { Game } from "@shared/game/core/Game";
 import { create } from "zustand";
-import { Position } from "@shared/game/core/Position";
+import { defaultGameConfig, GameConfig } from "@shared/game/core/GameConfig";
 
 interface GameStore {
-  game: Game | null
-  selectSquare: (position: Position) => void
-  setGame: (game: Game) => void
-  unselectSquare: () => void
+  gameConfig: GameConfig,
+  gameId: string | null,
+  setGameConfig: (gameConfig: GameConfig) => void,
+  setGameId: (gameId: string | null) => void
 }
 
-export const useGameStore = create<GameStore>((set) => ({
-  game: null,
-  selectSquare(position: Position) {
-    set(state => {
-      return ({
-        game: state.game !== null ? state.game.selectSquare(position) : null
-      })
-    });
+export const useGameStore = create<GameStore>((set, get) => ({
+  gameConfig: defaultGameConfig,
+  gameId: null,
+  setGameConfig(gameConfig: GameConfig) {
+    set({ gameConfig })
   },
-  setGame(game: Game) {
-    set(state => ({
-      game: Game.clone(game)
-    }))
-  },
-  unselectSquare() {
-    set(state => {
-      console.log("unselect square at useGameStore", state.game?.unselectSquare());
-      return ({
-        game: state.game !== null ? state.game.unselectSquare() : null
-      })
-    })
-  },
+  setGameId(gameId: string | null) {
+    set({ gameId })
+  }
 }))

@@ -1,84 +1,161 @@
 import { Board } from "./Board";
 import { Position } from "./Position";
 import { Move } from "./Move";
-
-export type PlayerNum = 0 | 1;
+import { GameConfig } from "./GameConfig";
+import { PlayerNum, } from "./GameConfig";
 
 // Game class controls 
 export class Game {
-  public board: Board;
-  public selectedSquare: Position | null;
-  public moveableSquares: Move[];
-  public player: PlayerNum;
-  public gameId: number;
+  public config: GameConfig;
 
-  constructor(gameId: number, player?: PlayerNum, p1Name?: string, p2Name?: string) {
-    this.board = new Board();
-    this.selectedSquare = null;
-    this.moveableSquares = [];
-    this.player = player === undefined ? 0 : player;
-    this.gameId = gameId;
+  constructor(config: Partial<GameConfig> = {}) {
+    this.config = {
+      board: config.board ?? new Board(),
+      selectedSquare: config.selectedSquare ?? null,
+      moveableSquares: config.moveableSquares ?? [],
+      player: config.player ?? 0,
+      mode: config.mode ?? "single",
+      winner: config.winner ?? null,
+      lastMove: config.lastMove ?? null
+    };
   }
 
+  /**
+   * Selects a square
+   * @param position Current select position
+   * @returns Game object
+   */
   selectSquare(position: Position) {
-    const newGame = new Game(this.gameId, this.player);
-    newGame.board = Board.clone(this.board);
+    const game = Game.clone(this);
+    const selectedSquare = game.board.squares[position.row][position.col];
 
-    const selectedSquare = newGame.board.squares[position.row][position.col];
+    // Select a square
+    game.selectedSquare = selectedSquare.position;
 
-    newGame.selectedSquare = position;
-
+    // If the square is animal piece then show available moves
     const piece = selectedSquare.piece;
-    const isRightPlayer = piece != null && this.player == selectedSquare.piece?.player;
-    // TESTING: player can move pieces any turns
-    // const isRightPlayer = true;
+    game.moveableSquares = piece && piece.player === game.player ? piece.showMoves(game, selectedSquare.position) : [];
 
-    newGame.moveableSquares = isRightPlayer && piece != null ? piece.showMoves(newGame, selectedSquare.position) : [];
-
-    return newGame;
+    return game;
   }
 
+  /**
+   * Unselects a square
+   * @returns Game object
+   */
   unselectSquare() {
-    const newGame = new Game(this.gameId, this.player);
+    const game = Game.clone(this);
 
-    newGame.board = Board.clone(this.board);
-    newGame.moveableSquares = [];
-    newGame.selectedSquare = null;
+    game.moveableSquares = [];
+    game.selectedSquare = null;
 
-    console.log(newGame);
-    return newGame;
+    return game;
   }
 
+  /**
+   * Moves a piece
+   * @returns Game object
+   */
   move(from: Position, to: Position) {
-    console.log(this.gameId, from, to);
-    const newGame = new Game(this.gameId, this.nextPlayer());
+    const game = Game.clone(this);
 
-    newGame.board = Board.clone(this.board);
-    newGame.board.move(from, to);
-    newGame.selectedSquare = null;
-    newGame.moveableSquares = [];
+    game.board.move(from, to);
+    game.player = this.nextPlayer();
+    game.selectedSquare = null;
+    game.moveableSquares = [];
+    game.lastMove = new Move(from, to);
+    game.checkGameOver();
 
-    // newGame.board.squares.forEach((row) => {
-    //   console.log(row);
-    // })
-    return newGame;
+    return game;
   }
 
   nextPlayer() {
-    return this.player == 1 ? 0 : 1
+    return this.config.player == 1 ? 0 : 1
   }
 
-  static clone(gameData: Game) {
-    const newGame = new Game(gameData.gameId);
-
-    newGame.board = Board.clone(gameData.board);
-    newGame.moveableSquares = gameData.moveableSquares;
-    newGame.player = gameData.player;
-    newGame.selectedSquare = gameData.selectedSquare;
-
-    console.log("clone", newGame);
-
-
-    return newGame;
+  /**
+   * Check whether the game is over
+   */
+  checkGameOver(): void {
+    if (this.board.squares[0][3].piece !== null) {
+      this.winner = 0;
+    }
+    else if (this.board.squares[0][3].piece !== null) {
+      this.winner = 1;
+    }
   }
+
+
+  /**
+   * Return deep copy of Game object
+   * @param gameData current game data
+   * @returns Game object
+   */
+  static clone(data: Game | GameConfig) {
+    const config = data instanceof Game ? data.config : data;
+
+    return new Game({
+      board: Board.clone(config.board),
+      selectedSquare: config.selectedSquare ? Position.clone(config.selectedSquare) : null,
+      moveableSquares: config.moveableSquares.map(Move.clone),
+      player: config.player,
+      mode: config.mode,
+      winner: config.winner,
+      lastMove: config.lastMove ? Move.clone(config.lastMove) : null
+    });
+  }
+
+
+  // get-set board
+  get board() { return this.config.board };
+  set board(board: Board) { this.config.board = board };
+
+  // get-set player
+  get player() { return this.config.player };
+  set player(player: PlayerNum) { this.config.player = player };
+
+  // get-set winner
+  get winner() { return this.config.winner };
+  set winner(winner: PlayerNum | null) { this.config.winner = winner };
+
+  // get-set selected square
+  get selectedSquare() { return this.config.selectedSquare };
+  set selectedSquare(pos: Position | null) { this.config.selectedSquare = pos };
+
+  // get-set moveable squares
+  get moveableSquares() { return this.config.moveableSquares };
+  set moveableSquares(move: Move[]) { this.config.moveableSquares = move };
+
+  // get-set last move
+  get lastMove() { return this.config.lastMove };
+  set lastMove(lastMove: Move | null) { this.config.lastMove = lastMove; }
+
+  // get mode
+  get mode() { return this.config.mode };
+  //serialization
+
+  /** Convert game instance to JSON data */
+  toJSON() {
+    return {
+      board: this.board,
+      current_turn: this.player,
+      winner: this.winner,
+      mode: this.mode,
+      last_move: this.lastMove
+    }
+  }
+
+
+  static fromJSON(data: any): GameConfig {
+    return {
+      board: data.board,
+      player: data.current_turn,
+      winner: data.winner,
+      mode: data.mode,
+      selectedSquare: null,
+      moveableSquares: [],
+      lastMove: data.last_move
+    }
+  }
+
 }

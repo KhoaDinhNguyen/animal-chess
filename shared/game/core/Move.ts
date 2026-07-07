@@ -20,4 +20,8 @@ export class Move {
     // dr = -1: bottom to top
     this.dr = from.row > to.row ? -1 : (from.row < to.row ? 1 : 0)
   }
+
+  static clone(m: Move) {
+    return new Move(m.from, m.to);
+  }
 }

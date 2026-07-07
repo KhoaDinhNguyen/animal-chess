@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { Game } from "@shared/game/core/Game"
+import { GameMode } from "@shared/game/core/Game";
 
 let io: Server;
 let games = new Map<number, Game>();
@@ -13,10 +14,10 @@ export const getSocketServerInstsance = () => {
   return io;
 }
 
-export const addNewGame = (): number => {
+export const addNewGame = (mode: GameMode): number => {
   const newGameId = gameId++;
 
-  games.set(newGameId, new Game(newGameId));
+  games.set(newGameId, new Game(newGameId, mode));
 
   return newGameId;
 }
