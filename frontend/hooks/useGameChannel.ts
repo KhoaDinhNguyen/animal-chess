@@ -5,13 +5,24 @@ import { useGameStore } from "./useGame";
 
 interface GameChannel {
   channel: null | RealtimeChannel,
-  subscribe: (gameId: string | null) => void
-  send: (action: string, payload: any) => void
+  player1Online: boolean,
+  player2Online: boolean,
+  subscribe: (gameId: string | null, role: string, token: string) => void
+  send: (action: string, payload: any) => Promise<void>
 }
+
+type PlayerPresence = {
+  presence_ref: string;
+  role: "player1" | "player2" | "spectator";
+  token: string;
+  joined_at: string;
+};
 
 export const useGameChannel = create<GameChannel>((set, get) => ({
   channel: null,
-  async subscribe(gameId: string | null) {
+  player1Online: false,
+  player2Online: false,
+  async subscribe(gameId: string | null, role: string, token: string) {
     // cleanup old channel
     const old = get().channel;
     if (old) {
@@ -21,10 +32,38 @@ export const useGameChannel = create<GameChannel>((set, get) => ({
     if (!gameId) return;
 
     // Listen channel
-    const channel = supabase.channel(`game:${gameId}`).on("broadcast", { event: "move" }, ({ payload }) => {
-      useGameStore.getState().setGameConfig(payload)
-    }).subscribe();
+    const channel = supabase.channel(`game:${gameId}`, {
+      config: {
+        presence: {
+          key: token
+        }
+      }
+    });
 
+    channel
+      .on("broadcast", { event: "move" }, ({ payload }) => {
+        useGameStore.getState().setGameConfig(payload)
+      })
+      .on("presence", { event: "sync" }, () => {
+        const state = channel.presenceState() as Record<string, PlayerPresence[]>;
+
+        const presences = Object.values(state).flat();
+
+        set({
+          player1Online: presences.some(p => p.role === "player1"),
+          player2Online: presences.some(p => p.role === "player2"),
+        });
+      })
+
+    channel.subscribe(async (status) => {
+      if (status === "SUBSCRIBED") {
+        await channel.track({
+          role: role,
+          joined_at: new Date().toISOString(),
+          token: token
+        })
+      }
+    })
     set({ channel });
   },
 
