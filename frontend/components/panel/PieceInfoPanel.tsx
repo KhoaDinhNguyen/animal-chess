@@ -21,7 +21,7 @@ export default function PieceInfoPanel() {
   }
 
   const animal = ANIMALS.find((a) => a.name.toLowerCase() === selectedPiece?.type);
-  const playerColor = selectedPiece?.player === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
+  const playerColor = selectedPiece?.player === 1 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 
   return (
     <>

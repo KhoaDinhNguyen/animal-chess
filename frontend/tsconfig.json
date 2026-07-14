@@ -26,17 +26,14 @@
       "@/*": [
         "./*"
       ],
-      "@shared/*": [
-        "../shared/*"
-      ],
       "@constants/*": [
         "./constants/*"
       ],
-      "@interface/*": [
-        "../shared/types/*"
-      ],
       "@database": [
         "./lib/database.ts"
+      ],
+      "@game/*": [
+        "./game/*"
       ]
     }
   },

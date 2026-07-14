@@ -5,11 +5,11 @@ import { COLORS } from "@constants/colors";
 export default function CurrentPlayerPanel() {
   const playerTurn = useGameStore((state) => state.gameConfig.player);
 
-  const turnColor = playerTurn === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
+  const turnColor = playerTurn === 1 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 
   const playerName = (p1: string, p2: string) => {
     if (playerTurn === undefined) return "";
-    if (playerTurn === 0) return p1;
+    if (playerTurn === 1) return p1;
     else return p2;
   };
   return (

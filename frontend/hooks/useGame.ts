@@ -1,6 +1,5 @@
 import { create } from "zustand";
-import { defaultGameConfig, GameConfig } from "@shared/game/core/GameConfig";
-import { PlayerNum } from "@shared/game/core/GameConfig";
+import { defaultGameConfig, GameConfig } from "@game/core/GameConfig";
 
 interface GameStore {
   gameConfig: GameConfig,

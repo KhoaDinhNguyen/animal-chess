@@ -1,6 +1,6 @@
 "use client";
 
-import { Board as BoardClass } from "@shared/game/core/Board";
+import { Board as BoardClass } from "@game/core/Board";
 import Square from "./Square";
 import { COLORS } from "@constants/colors";
 import { BOARD } from "@constants/board";

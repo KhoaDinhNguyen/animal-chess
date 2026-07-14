@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import WinModal from "./modal/WinModal";
 import { useGameChannel } from "@/hooks/useGameChannel";
 import { getOrCreateCookie } from "@/lib/cookies";
-import { Game } from "@shared/game/core/Game";
+import { Game } from "@game/core/Game";
 import { assignRoleToGame } from "@/lib/database";
 
 export const PLAYER_TOKEN = "player_token";
@@ -26,6 +26,7 @@ export default function GameClient({ gameData, gameId }: { gameData: any; gameId
     async function initToken() {
       let token = await getOrCreateCookie(PLAYER_TOKEN);
       const computedRole = await assignRoleToGame(gameId, token);
+      console.log(computedRole);
       setRole(computedRole);
 
       return [computedRole, token];

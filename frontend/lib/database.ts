@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
-import { GameConfig, GameMode } from "@shared/game/core/GameConfig";
-import { Game } from "@shared/game/core/Game";
-import { useGameChannel } from "@/hooks/useGameChannel";
+import { GameConfig, GameMode } from "@game/core/GameConfig";
+import { Game } from "@game/core/Game";
+
 /**
  * Fetchs game config given gameId
  * @param gameId string object

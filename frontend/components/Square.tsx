@@ -1,10 +1,10 @@
 "use client";
 
-import { Square as SquareClass } from "@shared/game/core/Square";
-import { Piece as PieceClass, PieceType } from "@shared/game/pieces/Piece";
+import { Square as SquareClass } from "@game/core/Square";
+import { Piece as PieceClass, PieceType } from "@game/pieces/Piece";
 import { useGameStore } from "@/hooks/useGame";
-import { Move } from "@shared/game/core/Move";
-import { Game } from "@shared/game/core/Game";
+import { Move } from "@game/core/Move";
+import { Game } from "@game/core/Game";
 
 import { makeMove } from "@/lib/services";
 // Import constant
@@ -26,19 +26,12 @@ export default function Square({ square, role }: { square: SquareClass; role: st
   if (!gameConfig || !gameId) return <></>;
 
   // Find moveable square
-  // console.log(
-  //   (piece?.player === 0 && role === "player1") || (piece?.player === 1 && role === "player2"),
-  //   role,
-  //   piece?.player,
-  //   gameConfig.moveableSquares,
-  //   gameConfig.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to)),
-  // );
   const selectedPiece = gameConfig.selectedSquare
     ? gameConfig.board.squares[gameConfig.selectedSquare.row][gameConfig.selectedSquare.col].piece
     : null;
 
   const isRightPlayer = selectedPiece
-    ? (selectedPiece.player === 0 && role === "player1") || (selectedPiece.player === 1 && role === "player2")
+    ? (selectedPiece.player === 1 && role === "player1") || (selectedPiece.player === 2 && role === "player2")
     : false;
 
   const moveable = isRightPlayer
@@ -100,10 +93,10 @@ export default function Square({ square, role }: { square: SquareClass; role: st
       {piece && <Piece piece={piece} select={isSelected} isCapture={isCapture} />}
       {moveable && !piece && <MoveDirection move={moveable} />}
       {isLastMoveFrom && (
-        <LastPositionFrom color={gameConfig.player === 0 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
+        <LastPositionFrom color={gameConfig.player === 1 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
       )}
       {isLastMoveTo && (
-        <LastPositionTo color={gameConfig.player === 0 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
+        <LastPositionTo color={gameConfig.player === 1 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
       )}
     </div>
   );
@@ -129,7 +122,7 @@ function SquareLabel({ square }: { square: SquareClass }) {
 }
 // --- Piece component ---------------------------
 function Piece({ piece, select, isCapture }: { piece: PieceClass; select: boolean; isCapture: boolean }) {
-  const playerColor = piece.player === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
+  const playerColor = piece.player === 1 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 
   return (
     <div

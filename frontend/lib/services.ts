@@ -1,10 +1,10 @@
-import { GameConfig } from "@shared/game/core/GameConfig";
-import { Move } from "@shared/game/core/Move";
-import { Game } from "@shared/game/core/Game";
+import { GameConfig } from "@game/core/GameConfig";
+import { Move } from "@game/core/Move";
+import { Game } from "@game/core/Game";
 import { useGameStore } from "@/hooks/useGame";
 import { updateGame } from "./database";
 import { useGameChannel } from "@/hooks/useGameChannel";
-import { findBestMoveForAI } from "@shared/game/ai/Minimax";
+import { findBestMoveForAI } from "@game/ai/Minimax";
 
 /** Apply player's move */
 export async function makeMove(gameId: string, gameConfig: GameConfig, move: Move) {

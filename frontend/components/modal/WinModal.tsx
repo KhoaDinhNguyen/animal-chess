@@ -1,6 +1,6 @@
 "use client";
 
-import { PlayerNum } from "@shared/game/core/GameConfig";
+import { PlayerNum } from "@game/core/GameConfig";
 import { RotateCcw, Home } from "lucide-react";
 import { COLORS } from "@constants/colors";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ interface WinModalProps {
 }
 export default function WinModal(props: WinModalProps) {
   const { winner } = props;
-  const playerColor = winner === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
+  const playerColor = winner === 1 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
   const router = useRouter();
 
   return (
@@ -66,7 +66,7 @@ export default function WinModal(props: WinModalProps) {
               style={{
                 fontFamily: "'Cinzel', serif",
                 background:
-                  winner === 0
+                  winner === 1
                     ? "linear-gradient(135deg, #2a6ec8, #1a4a8a)"
                     : "linear-gradient(135deg, #c62a2a, #8a1a1a)",
                 color: "#f0e4c2",
