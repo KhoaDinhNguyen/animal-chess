@@ -4,7 +4,8 @@ import { Board as BoardClass } from "@shared/game/core/Board";
 import Square from "./Square";
 import { COLORS } from "@constants/colors";
 import { BOARD } from "@constants/board";
-
+import PlayerStatus from "./PlayerStatus";
+import { useGameChannel } from "@/hooks/useGameChannel";
 interface BoardProps {
   board: BoardClass;
   role: string;
@@ -13,21 +14,17 @@ interface BoardProps {
 export default function Board(props: BoardProps) {
   const { board, role } = props;
   const { COLS_NUM, ROWS_NUM, CELL_SIZE } = BOARD;
+  const player2Online = useGameChannel((s) => s.player2Online);
+  const player1Online = useGameChannel((s) => s.player1Online);
 
   return (
     <div className="shrink-0">
       {/* P2 label */}
-      <div className="flex items-center gap-2 mb-1 px-0.5">
-        <div className="w-2 h-2 rounded-full" style={{ background: COLORS.P2_COLOR }} />
-        <span
-          className="text-xs tracking-widest uppercase"
-          style={{ fontFamily: "'Cinzel', serif", color: COLORS.P2_COLOR, opacity: 0.8 }}>
-          Player 2
-        </span>
-      </div>
+      <PlayerStatus player="Player 2" color={COLORS.P2_COLOR} online={player2Online} />
 
       {/** Grid */}
       <div
+        className="mb-1"
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${COLS_NUM}, ${CELL_SIZE}px)`,
@@ -43,14 +40,7 @@ export default function Board(props: BoardProps) {
       </div>
 
       {/* P1 label */}
-      <div className="flex items-center justify-end gap-2 mt-1 px-0.5">
-        <span
-          className="text-xs tracking-widest uppercase"
-          style={{ fontFamily: "'Cinzel', serif", color: COLORS.P1_COLOR, opacity: 0.8 }}>
-          Player 1
-        </span>
-        <div className="w-2 h-2 rounded-full" style={{ background: COLORS.P1_COLOR }} />
-      </div>
+      <PlayerStatus player="Player 1" online={player1Online} color={COLORS.P1_COLOR} playerStatusPosition="right" />
     </div>
   );
 }

@@ -19,19 +19,24 @@ export default function GameClient({ gameData, gameId }: { gameData: any; gameId
 
   useEffect(() => {
     setGameConfig(Game.fromJSON(gameData));
-    subscribe(gameId);
     setGameId(gameId);
   }, [gameData, setGameConfig, gameId]);
 
   useEffect(() => {
-    async function checkPlayerToken() {
+    async function initToken() {
       let token = await getOrCreateCookie(PLAYER_TOKEN);
       const computedRole = await assignRoleToGame(gameId, token);
-
       setRole(computedRole);
+
+      return [computedRole, token];
     }
 
-    checkPlayerToken();
+    async function initGame() {
+      const [role, token] = await initToken();
+      subscribe(gameId, role, token);
+    }
+
+    initGame();
   }, [gameId]);
 
   // Check the game first
