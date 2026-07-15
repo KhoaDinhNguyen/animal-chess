@@ -103,10 +103,10 @@ export class Game {
     const [player1Row, player1Col] = DEN_BY_PLAYER.player1;
     const [player2Row, player2Col] = DEN_BY_PLAYER.player2;
 
-    if (this.board.squares[player1Row][player1Col].piece !== null) {
+    if (this.board.squares[player2Row][player2Col].piece !== null) {
       this.winner = "player1";
     }
-    else if (this.board.squares[player2Row][player2Col].piece !== null) {
+    else if (this.board.squares[player1Row][player1Col].piece !== null) {
       this.winner = "player2";
     }
   }
