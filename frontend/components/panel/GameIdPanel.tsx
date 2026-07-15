@@ -1,6 +1,6 @@
 "use client";
 
-import { useClipBoard } from "@/hooks/useClipboard";
+import { useClipboard } from "@/hooks/useClipboard";
 import { useGameStore } from "@/hooks/useGame";
 import { Link2, Check, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ export default function GameIdPanel() {
 
 /** Clipboard GameID */
 function GameIdButton({ gameId }: { gameId: string }) {
-  const [copied, handleCopy] = useClipBoard();
+  const [copied, handleCopy] = useClipboard();
 
   return (
     <button
@@ -54,7 +54,7 @@ function GameIdButton({ gameId }: { gameId: string }) {
 /** Clipboard GameURL */
 function GameURLButton({ gameId }: { gameId: string }) {
   const [url, setUrl] = useState("");
-  const [copied, handleCopy] = useClipBoard();
+  const [copied, handleCopy] = useClipboard();
 
   useEffect(() => {
     setUrl(window.location.href);

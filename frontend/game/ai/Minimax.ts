@@ -15,7 +15,7 @@ export function minimax(depth: number, game: Game, alpha: number, beta: number):
     return evaluate(game);
   }
 
-  if (game.player === 1) {
+  if (game.currentTurnPlayer === "player1") {
     let maxVal = Number.NEGATIVE_INFINITY;
     for (const move of moves) {
       maxVal = Math.max(maxVal, minimax(depth - 1, result(game, move), alpha, beta));

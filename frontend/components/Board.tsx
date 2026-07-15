@@ -20,7 +20,7 @@ export default function Board(props: BoardProps) {
   return (
     <div className="shrink-0">
       {/* P2 label */}
-      <PlayerStatus player="Player 2" color={COLORS.P2_COLOR} online={player2Online} />
+      <PlayerStatus player="player2" color={COLORS.P2_COLOR} online={player2Online} />
 
       {/** Grid */}
       <div
@@ -40,7 +40,7 @@ export default function Board(props: BoardProps) {
       </div>
 
       {/* P1 label */}
-      <PlayerStatus player="Player 1" online={player1Online} color={COLORS.P1_COLOR} playerStatusPosition="right" />
+      <PlayerStatus player="player1" online={player1Online} color={COLORS.P1_COLOR} playerStatusPosition="right" />
     </div>
   );
 }

@@ -15,8 +15,8 @@ export function action(game: Game): Move[] {
     row.forEach(square => {
       const piece = square.piece;
 
-      if (piece !== null && piece.player === game.player) {
-        possibleMoves.push(...piece.showMoves(game, square.position));
+      if (piece !== null && piece.player === game.currentTurnPlayer) {
+        possibleMoves.push(...piece.getLegalMoves(game, square.position));
       }
     })
   })

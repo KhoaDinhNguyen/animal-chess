@@ -1,56 +1,44 @@
-import { Square, SquareType } from "./Square";
-import { PieceType } from "../pieces/Piece";
-// import { PieceFactory } from "../pieces/PieceFactory";
+import { Square } from "./Square";
+import { ActivePlayer, BoardCoordinate, PieceType, SquareType } from "@game/types"
 import { Position } from "./Position";
 import { Piece } from "../pieces/Piece";
+import { INITIAL_PIECE_POSITIONS, BOARD_COLS, BOARD_ROWS, TRAPS_BY_PLAYER, RIVER_SQUARES, DEN_BY_PLAYER } from "./boardLayout"
+
 
 /** Board class controls board's squares, and pieces */
 export class Board {
-  // Board consits multiple squares
+  // -----------------------------------------------------------------------------
+  // Fields
+  // -----------------------------------------------------------------------------
+
   public squares: Square[][];
 
+  // -----------------------------------------------------------------------------
+  // Constructor
+  // -----------------------------------------------------------------------------
   constructor() {
-    // Initializes
-    this.squares = Array.from({ length: NUM_ROW }, (_, rowIdx) => Array.from({ length: NUM_COL }, (_, colIdx) => new Square(new Position(rowIdx, colIdx,), null, "plain")));
+    this.squares = this.createSquares();
 
-    // Assign river, traps, and dens
-    this.assignType(RIVERS, "river");
-    this.assignType(TRAPS, "trap");
-    this.assignType(DENS, "den");
-
-    // Assign pieces
-    this.assignPiece(MOUSES, "mouse");
-    this.assignPiece(ELEPLANTS, "elephant");
-    this.assignPiece(LIONS, "lion");
-    this.assignPiece(TIGERS, "tiger");
-    this.assignPiece(LEOPARDS, "leopard");
-    this.assignPiece(DOGS, "dog");
-    this.assignPiece(WOLFS, "wolf");
-    this.assignPiece(CATS, "cat");
+    this.initializeTerrain();
+    this.initializePieces();
   }
 
-  /**
-   * Assign square's type to each positions
-   * @param positions list of positions
-   * @param type square's type
-   */
-  assignType(positions: number[][], type: SquareType) {
-    positions.forEach((position) => {
-      const [r, c] = position;
-      this.squares[r][c].type = type;
-    })
-  }
+  // -----------------------------------------------------------------------------
+  // Public
+  // -----------------------------------------------------------------------------
 
   /**
-   * Assign piece's type to each positions
-   * @param positions list of positions
-   * @param type piece's type
-   */
-  assignPiece(positions: number[][], type: PieceType) {
-    positions.forEach((position, idx) => {
-      const [r, c] = position;
-      this.squares[r][c].piece = new Piece(idx == 0 ? 1 : 2, type);
-    })
+ * Moves a piece to the destination square.
+ * Any existing piece on the destination square is replaced.
+ * @param from intial position
+ * @param to next position
+ */
+  move(from: Position, to: Position) {
+    const { row: fromRow, col: fromCol } = from;
+    const { row: toRow, col: toCol } = to;
+
+    this.squares[toRow][toCol].piece = this.squares[fromRow][fromCol].piece;
+    this.squares[fromRow][fromCol].piece = null;
   }
 
   /**
@@ -59,70 +47,71 @@ export class Board {
    * @returns new object cloning from the parameter
    */
   static clone(board: Board) {
-    const newBoard = new Board();
-    newBoard.squares = board.squares.map(row => row.map((square) => Square.clone(square)));
+    const cloned = new Board();
 
-    return newBoard;
+    cloned.squares = board.squares.map(row =>
+      row.map(Square.clone)
+    );
+
+    return cloned;
+  }
+
+  // -----------------------------------------------------------------------------
+  // Initialization
+  // -----------------------------------------------------------------------------
+
+  private createSquares(): Square[][] {
+    return Array.from(
+      { length: BOARD_ROWS },
+      (_, row) =>
+        Array.from(
+          { length: BOARD_COLS },
+          (_, col) =>
+            new Square(new Position(row, col), null, "plain")));
+  }
+
+  private initializePieces() {
+    for (const [type, positions] of Object.entries(INITIAL_PIECE_POSITIONS) as [PieceType, BoardCoordinate[]][]) {
+      this.placePieces(type, positions);
+    }
+  }
+
+  private initializeTerrain() {
+    this.paintSquares(RIVER_SQUARES, "river");
+
+    for (const traps of Object.values(TRAPS_BY_PLAYER)) {
+      this.paintSquares(traps, "trap");
+    }
+
+    for (const den of Object.values(DEN_BY_PLAYER)) {
+      this.paintSquares([den], "den");
+    }
+  }
+
+  // -----------------------------------------------------------------------------
+  // Helpers
+  // -----------------------------------------------------------------------------
+
+  /**
+ * Marks each specified square as the given terrain type (river, trap, or den)
+ * @param positions list of positions 
+ * @param type square's type
+ */
+  private paintSquares(positions: BoardCoordinate[], type: SquareType) {
+    positions.forEach(([row, col]) => {
+      this.squares[row][col].type = type;
+    })
   }
 
   /**
-   * Move piece from Position to Position
-   * @param from intial position
-   * @param to next position
+   * Places the specified piece type for both players.
+   * @param type piece's type
+   * @param positions list of positions
    */
-  move(from: Position, to: Position) {
-    const [oldR, oldC, newR, newC] = [from.row, from.col, to.row, to.col];
-
-    this.squares[newR][newC].piece = this.squares[oldR][oldC].piece;
-    this.squares[oldR][oldC].piece = null;
+  private placePieces(type: PieceType, positions: BoardCoordinate[],) {
+    positions.forEach(([row, col], index) => {
+      const owner: ActivePlayer = index === 0 ? "player1" : "player2";
+      this.squares[row][col].piece = new Piece(owner, type);
+    })
   }
 }
-
-export const NUM_ROW: number = 9;
-export const NUM_COL: number = 7;
-
-// River's positions
-const RIVERS: number[][] =
-  [[3, 1], [3, 2], [3, 4], [3, 5],
-  [4, 1], [4, 2], [4, 4], [4, 5],
-  [5, 1], [5, 2], [5, 4], [5, 5],];
-
-// Trap's positions
-export const TRAPS: number[][] =
-  [[8, 2], [7, 3], [8, 4],
-  [0, 2], [1, 3], [0, 4]];
-
-// Den's positions
-export const DENS: number[][] =
-  [[8, 3], [0, 3]];
-// Mouse's positions
-const MOUSES: number[][] =
-  [[6, 6], [2, 0]];
-
-// Elephant's positions
-const ELEPLANTS: number[][] =
-  [[6, 0], [2, 6]];
-
-// Lion's positions
-const LIONS: number[][] =
-  [[8, 6], [0, 0]];
-
-// Tiger's positions
-const TIGERS: number[][] =
-  [[8, 0], [0, 6]]
-
-// Leopard's positions
-const LEOPARDS: number[][] =
-  [[6, 4], [2, 2]];
-
-// Wolf's positions
-const WOLFS: number[][] =
-  [[6, 2], [2, 4]];
-
-// Dog's positions
-const DOGS: number[][] =
-  [[7, 5], [1, 1]]
-
-// Cat's coordiates
-const CATS: number[][] =
-  [[7, 1], [1, 5]]

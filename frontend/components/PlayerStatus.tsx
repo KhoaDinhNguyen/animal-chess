@@ -3,9 +3,10 @@
 import { COLORS } from "@constants/colors";
 import { useGameStore } from "@/hooks/useGame";
 import WaitingTurnIndicator from "./WaitingTurnIndicator";
+import { PlayerRole } from "@game/types";
 
 interface PlayerStatusProps {
-  player: string;
+  player: PlayerRole;
   online: boolean;
   color: string;
   playerStatusPosition?: "left" | "right";
@@ -13,10 +14,10 @@ interface PlayerStatusProps {
 
 export default function PlayerStatus({ player, online, color, playerStatusPosition = "left" }: PlayerStatusProps) {
   const gameConfig = useGameStore((state) => state.gameConfig);
-  const currentPlayer = gameConfig.player;
+  const currentPlayer = gameConfig.currentTurnPlayer;
   const gameMode = gameConfig.mode;
-  const statusColor = online || (player === "Player 2" && gameMode === "single") ? color : COLORS.OFFLINE_COLOR;
-  const isWaiting = (currentPlayer === 1 && player === "Player 1") || (currentPlayer === 2 && player === "Player 2");
+  const statusColor = online || (player === "player2" && gameMode === "single") ? color : COLORS.OFFLINE_COLOR;
+  const isWaiting = currentPlayer === player;
 
   return (
     <div
@@ -30,9 +31,9 @@ export default function PlayerStatus({ player, online, color, playerStatusPositi
           <span
             className="text-xs tracking-widest uppercase py-0"
             style={{ fontFamily: "'Cinzel', serif", color: statusColor }}>
-            {player}
+            {player === "player1" ? "Player 1" : "Player 2"}
             {!online && gameMode === "multi" && " (Offline)"}
-            {gameMode === "single" && player === "Player 2" && " (Bot)"}
+            {gameMode === "single" && player === "player2" && " (Bot)"}
           </span>
         </div>
       </div>

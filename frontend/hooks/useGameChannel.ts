@@ -2,28 +2,35 @@ import { supabase } from "@/lib/supabase";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { useGameStore } from "./useGame";
+import { GameConfig } from "@/game/core/GameConfig";
+import { PlayerRole } from "@game/types";
+
+// ---- Type & Interface ------------------------------------------------------
+type GameBroadcastEvent = "move";
+type GameBroadcastPayload = GameConfig
+
+type PlayerPresence = {
+  presence_ref: string;
+  role: PlayerRole;
+  token: string;
+  joined_at: string;
+};
 
 interface GameChannel {
   channel: null | RealtimeChannel,
   player1Online: boolean,
   player2Online: boolean,
-  subscribe: (gameId: string | null, role: string, token: string) => void
-  send: (action: string, payload: any) => Promise<void>
+  subscribe: (gameId: string | null, role: PlayerRole, token: string) => Promise<void>
+  send: (action: GameBroadcastEvent, payload: GameBroadcastPayload) => Promise<void>
 }
 
-type PlayerPresence = {
-  presence_ref: string;
-  role: "player1" | "player2" | "spectator";
-  token: string;
-  joined_at: string;
-};
-
+// ---- Zustand's function ---------------------------------------------------
 export const useGameChannel = create<GameChannel>((set, get) => ({
   channel: null,
   player1Online: false,
   player2Online: false,
-  async subscribe(gameId: string | null, role: string, token: string) {
-    // cleanup old channel
+  async subscribe(gameId: string | null, role: PlayerRole, token: string) {
+    // Leave the previous game's realtime channel before joining another one.
     const old = get().channel;
     if (old) {
       await old.unsubscribe();
@@ -31,7 +38,6 @@ export const useGameChannel = create<GameChannel>((set, get) => ({
 
     if (!gameId) return;
 
-    // Listen channel
     const channel = supabase.channel(`game:${gameId}`, {
       config: {
         presence: {
@@ -67,14 +73,14 @@ export const useGameChannel = create<GameChannel>((set, get) => ({
     set({ channel });
   },
 
-  async send(action: string, payload: any) {
+  async send(event: GameBroadcastEvent, payload: GameBroadcastPayload) {
     const channel = get().channel;
 
     if (channel) {
       await channel.send({
         type: "broadcast",
-        event: action,
-        payload: payload
+        event,
+        payload,
       })
     }
   }

@@ -1,15 +1,12 @@
 import { Piece } from "../pieces/Piece";
-// import { PieceFactory } from "../pieces/PieceFactory";
 import { Position } from "./Position";
-import { TRAPS } from "./Board";
-import { PlayerNum } from "./GameConfig";
-
-export type SquareType = "plain" | "river" | "trap" | "den";
+import { TRAPS_BY_PLAYER } from "./boardLayout";
+import { PlayerRole, SquareType } from "@game/types";
 
 export class Square {
   public piece: Piece | null;
   public type: SquareType;
-  public position: Position;
+  public readonly position: Position;
 
   constructor(position: Position, piece: Piece | null, type: SquareType) {
     this.position = Position.clone(position);
@@ -18,13 +15,16 @@ export class Square {
   }
 
   static clone(square: Square): Square {
-    if (square.piece == null) return new Square(square.position, null, square.type);
-
-    return new Square(Position.clone(square.position), new Piece(square.piece.player, square.piece.type), square.type);
+    return new Square(
+      Position.clone(square.position),
+      square.piece ? new Piece(square.piece.player, square.piece.type) : null,
+      square.type
+    );
   }
 
   /**
- * Get Manhattan distance from current position
+ * Returns the Manhattan distance from this square
+ * to the specified position.
  * @param targetPosition position object
  * @returns integer
  */
@@ -32,19 +32,27 @@ export class Square {
     return Math.abs(targetPosition.row - this.position.row) + Math.abs(targetPosition.col - this.position.col);
   }
 
-  isEnemyTrap(player: PlayerNum): boolean {
-    if (this.type !== "trap") return false;
+  /**
+ * Returns whether this square is one of the opponent's traps.
+ */
+  isEnemyTrap(player: PlayerRole): boolean {
+    const trapOwner = this.getTrapOwner();
 
-    const enemyTrap = player === 1 ? [...TRAPS.slice(0, 3)] : [...TRAPS.slice(-3)];
-
-    return enemyTrap.some(trap => (trap[0] === this.position.row && trap[1] === this.position.col));
+    return trapOwner !== null && trapOwner !== player;
   }
 
-  isOwnTrap(player: PlayerNum): boolean {
-    if (this.type !== "trap") return false;
+  // -----------------------------------------------------------------------------
+  // Helpers
+  // -----------------------------------------------------------------------------
+  /**
+ * Returns the owner of this trap.
+ *
+ * Returns null if this square is not a trap.
+ */
+  private getTrapOwner(): PlayerRole | null {
+    if (this.type !== "trap") return null;
 
-    const ownTrap = player === 1 ? [...TRAPS.slice(0, 3)] : [...TRAPS.slice(-3)];
-
-    return ownTrap.some(trap => (trap[0] === this.position.row && trap[1] === this.position.col));
+    const { row, col } = this.position;
+    return TRAPS_BY_PLAYER.player1.some(([trapRow, trapCol]) => trapRow === row && trapCol === col) ? "player1" : "player2"
   }
 }

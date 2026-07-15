@@ -1,6 +1,7 @@
 import { supabase } from "./supabase";
-import { GameConfig, GameMode } from "@game/core/GameConfig";
+import { GameConfig } from "@game/core/GameConfig";
 import { Game } from "@game/core/Game";
+import { PlayerRole, GameMode } from "@game/types";
 
 /**
  * Fetchs game config given gameId
@@ -53,7 +54,7 @@ export async function updateGame(gameId: string, game: GameConfig) {
   return data;
 }
 
-export async function assignRoleToGame(gameId: string, token: string): Promise<"player1" | "player2" | "spectator"> {
+export async function assignRoleToGame(gameId: string, token: string): Promise<PlayerRole> {
   // Check if already join
   const { data: game } = await supabase.from("games").select("player_1_token, player_2_token, mode").eq("id", gameId).single();
 

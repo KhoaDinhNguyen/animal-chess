@@ -1,13 +1,6 @@
 "use server"
 import { cookies } from "next/headers";
 
-/** Check whether cookie exist given key */
-async function hasCookie(key: string): Promise<boolean> {
-  const cookieStore = await cookies();
-
-  return cookieStore.has(key);
-}
-
 /** Get player token, generate if the token does not exist */
 export async function getOrCreateCookie(key: string): Promise<string> {
   const cookieStore = await cookies();

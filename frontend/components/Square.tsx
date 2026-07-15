@@ -1,7 +1,8 @@
 "use client";
 
 import { Square as SquareClass } from "@game/core/Square";
-import { Piece as PieceClass, PieceType } from "@game/pieces/Piece";
+import { Piece as PieceClass } from "@/game/pieces/Piece";
+import { PieceType } from "@game/types";
 import { useGameStore } from "@/hooks/useGame";
 import { Move } from "@game/core/Move";
 import { Game } from "@game/core/Game";
@@ -30,9 +31,7 @@ export default function Square({ square, role }: { square: SquareClass; role: st
     ? gameConfig.board.squares[gameConfig.selectedSquare.row][gameConfig.selectedSquare.col].piece
     : null;
 
-  const isRightPlayer = selectedPiece
-    ? (selectedPiece.player === 1 && role === "player1") || (selectedPiece.player === 2 && role === "player2")
-    : false;
+  const isRightPlayer = selectedPiece ? selectedPiece.player === role : false;
 
   const moveable = isRightPlayer
     ? gameConfig.moveableSquares.find((movableSquare) => square.position.equal(movableSquare.to))
@@ -93,10 +92,14 @@ export default function Square({ square, role }: { square: SquareClass; role: st
       {piece && <Piece piece={piece} select={isSelected} isCapture={isCapture} />}
       {moveable && !piece && <MoveDirection move={moveable} />}
       {isLastMoveFrom && (
-        <LastPositionFrom color={gameConfig.player === 1 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
+        <LastPositionFrom
+          color={gameConfig.currentTurnPlayer === "player1" ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`}
+        />
       )}
       {isLastMoveTo && (
-        <LastPositionTo color={gameConfig.player === 1 ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`} />
+        <LastPositionTo
+          color={gameConfig.currentTurnPlayer === "player1" ? `${COLORS.P2_COLOR}80` : `${COLORS.P1_COLOR}80`}
+        />
       )}
     </div>
   );
@@ -122,7 +125,7 @@ function SquareLabel({ square }: { square: SquareClass }) {
 }
 // --- Piece component ---------------------------
 function Piece({ piece, select, isCapture }: { piece: PieceClass; select: boolean; isCapture: boolean }) {
-  const playerColor = piece.player === 1 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
+  const playerColor = piece.player === "player1" ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 
   return (
     <div

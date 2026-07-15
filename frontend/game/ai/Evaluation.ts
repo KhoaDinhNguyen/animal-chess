@@ -1,6 +1,11 @@
 import { Game } from "../core/Game";
-import { PlayerNum } from "../core/GameConfig";
+import { PlayerRole } from "@game/types"
 import { Position } from "../core/Position";
+
+const WIN_SCORE = 1000000;
+const PIECE_SCORE_MULTIPLIER = 100;
+const TRAP_CONTROL_SCORE = 30;
+const MAX_DEN_DISTANCE = 11;
 
 /**
  * Evaluate the score of the game (assuming that bot is minimize player)
@@ -11,8 +16,8 @@ export function evaluate(game: Game): number {
   const squares = game.board.squares;
 
   // Check dens
-  if (squares[0][3].piece !== null) return 1000000;
-  else if (squares[8][3].piece !== null) return -1000000;
+  if (squares[0][3].piece !== null) return WIN_SCORE;
+  else if (squares[8][3].piece !== null) return -WIN_SCORE;
 
   let score = 0;
   // Sum of all pieces
@@ -41,7 +46,7 @@ function evaluatePiece(game: Game): number {
       if (!piece) continue;
 
       const sign = getSign(piece.player);
-      score = score + piece.rank * sign * 100;
+      score = score + piece.rank * sign * PIECE_SCORE_MULTIPLIER;
 
     }
   }
@@ -51,7 +56,6 @@ function evaluatePiece(game: Game): number {
 
 /** Evalute game's score based on position */
 function evaluatePosition(game: Game): number {
-  const MAX_DISTANCE = 11;
   let score = 0;
 
   const squares = game.board.squares;
@@ -64,7 +68,7 @@ function evaluatePosition(game: Game): number {
       if (!piece) continue;
       const sign = getSign(piece.player);
 
-      const progress = MAX_DISTANCE - square.getDistanceToEnemyDen(piece.player === 1 ? new Position(8, 3) : new Position(0, 3));
+      const progress = MAX_DEN_DISTANCE - square.getDistanceToEnemyDen(piece.player === "player1" ? new Position(8, 3) : new Position(0, 3));
       score += progress * sign * piece.rank;
     }
   }
@@ -87,13 +91,13 @@ function evaluateTrapControl(game: Game): number {
       const sign = getSign(piece.player);
 
       if (square.isEnemyTrap(piece.player)) {
-        score += 30 * sign;
+        score += TRAP_CONTROL_SCORE * sign;
       }
     }
   }
   return score;
 }
 
-function getSign(player: PlayerNum) {
-  return player === 1 ? 1 : -1;
+function getSign(player: PlayerRole) {
+  return player === "player1" ? 1 : -1;
 }

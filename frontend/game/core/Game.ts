@@ -1,10 +1,18 @@
 import { Board } from "./Board";
 import { Position } from "./Position";
 import { Move } from "./Move";
+import { PlayerRole } from "@game/types";
 import { GameConfig } from "./GameConfig";
-import { PlayerNum, } from "./GameConfig";
+import { DEN_BY_PLAYER } from "./boardLayout";
 
-// Game class controls 
+/**
+ * Represents the complete state of a game.
+ *
+ * The Game class follows an immutable-style design:
+ * operations such as selecting a square or moving a piece
+ * return a cloned game state instead of modifying the
+ * original instance.
+ */
 export class Game {
   public config: GameConfig;
 
@@ -13,7 +21,7 @@ export class Game {
       board: config.board ?? new Board(),
       selectedSquare: config.selectedSquare ?? null,
       moveableSquares: config.moveableSquares ?? [],
-      player: config.player ?? 1,
+      currentTurnPlayer: config.currentTurnPlayer ?? "player1",
       mode: config.mode ?? "single",
       winner: config.winner ?? null,
       lastMove: config.lastMove ?? null
@@ -21,7 +29,10 @@ export class Game {
   }
 
   /**
-   * Selects a square
+   * Selects a board square and updates the list of legal moves.
+   *
+   * If the selected square contains the current player's piece,
+   * its legal moves are generated. Otherwise, no moves are available.
    * @param position Current select position
    * @returns Game object
    */
@@ -34,7 +45,9 @@ export class Game {
 
     // If the square is animal piece then show available moves
     const piece = selectedSquare.piece;
-    game.moveableSquares = piece && piece.player === game.player ? piece.showMoves(game, selectedSquare.position) : [];
+    const canMove = piece && piece.player;
+
+    game.moveableSquares = canMove ? piece.getLegalMoves(game, selectedSquare.position) : [];
 
     return game;
   }
@@ -53,39 +66,54 @@ export class Game {
   }
 
   /**
-   * Moves a piece
+   * Applies a move and advances the game to the next turn.
+   *
+   * This updates the board, clears the current selection,
+   * records the last move, and checks for a winner.
    * @returns Game object
    */
   move(from: Position, to: Position) {
     const game = Game.clone(this);
 
     game.board.move(from, to);
-    game.player = this.nextPlayer();
+    game.lastMove = new Move(from, to);
+
     game.selectedSquare = null;
     game.moveableSquares = [];
-    game.lastMove = new Move(from, to);
+
+    game.currentTurnPlayer = this.getNextPlayer();
+
     game.checkGameOver();
 
     return game;
   }
 
-  nextPlayer() {
-    return this.config.player == 1 ? 2 : 1
+  // -----------------------------------------------------------------------------
+  // Game state
+  // -----------------------------------------------------------------------------
+  getNextPlayer(): PlayerRole {
+    return this.config.currentTurnPlayer == "player1" ? "player2" : "player1"
   }
 
   /**
-   * Check whether the game is over
+   * Determines whether either player has occupied
+   * the opponent's den.
    */
   checkGameOver(): void {
-    if (this.board.squares[0][3].piece !== null) {
-      this.winner = 1;
+    const [player1Row, player1Col] = DEN_BY_PLAYER.player1;
+    const [player2Row, player2Col] = DEN_BY_PLAYER.player2;
+
+    if (this.board.squares[player1Row][player1Col].piece !== null) {
+      this.winner = "player1";
     }
-    else if (this.board.squares[0][3].piece !== null) {
-      this.winner = 2;
+    else if (this.board.squares[player2Row][player2Col].piece !== null) {
+      this.winner = "player2";
     }
   }
 
-
+  // -----------------------------------------------------------------------------
+  // Helpers
+  // -----------------------------------------------------------------------------
   /**
    * Return deep copy of Game object
    * @param gameData current game data
@@ -98,11 +126,35 @@ export class Game {
       board: Board.clone(config.board),
       selectedSquare: config.selectedSquare ? Position.clone(config.selectedSquare) : null,
       moveableSquares: config.moveableSquares.map(Move.clone),
-      player: config.player,
+      currentTurnPlayer: config.currentTurnPlayer,
       mode: config.mode,
       winner: config.winner,
       lastMove: config.lastMove ? Move.clone(config.lastMove) : null
     });
+  }
+
+  /** Convert game instance to JSON data */
+  toJSON() {
+    return {
+      board: this.board,
+      current_turn: this.currentTurnPlayer,
+      winner: this.winner,
+      mode: this.mode,
+      last_move: this.lastMove
+    }
+  }
+
+
+  static fromJSON(data: any): GameConfig {
+    return {
+      board: data.board,
+      currentTurnPlayer: data.current_turn,
+      winner: data.winner,
+      mode: data.mode,
+      selectedSquare: null,
+      moveableSquares: [],
+      lastMove: data.last_move
+    }
   }
 
 
@@ -111,12 +163,12 @@ export class Game {
   set board(board: Board) { this.config.board = board };
 
   // get-set player
-  get player() { return this.config.player };
-  set player(player: PlayerNum) { this.config.player = player };
+  get currentTurnPlayer() { return this.config.currentTurnPlayer };
+  set currentTurnPlayer(currentTurnPlayer: PlayerRole) { this.config.currentTurnPlayer = currentTurnPlayer };
 
   // get-set winner
   get winner() { return this.config.winner };
-  set winner(winner: PlayerNum | null) { this.config.winner = winner };
+  set winner(winner: PlayerRole | null) { this.config.winner = winner };
 
   // get-set selected square
   get selectedSquare() { return this.config.selectedSquare };
@@ -132,30 +184,4 @@ export class Game {
 
   // get mode
   get mode() { return this.config.mode };
-  //serialization
-
-  /** Convert game instance to JSON data */
-  toJSON() {
-    return {
-      board: this.board,
-      current_turn: this.player,
-      winner: this.winner,
-      mode: this.mode,
-      last_move: this.lastMove
-    }
-  }
-
-
-  static fromJSON(data: any): GameConfig {
-    return {
-      board: data.board,
-      player: data.current_turn,
-      winner: data.winner,
-      mode: data.mode,
-      selectedSquare: null,
-      moveableSquares: [],
-      lastMove: data.last_move
-    }
-  }
-
 }

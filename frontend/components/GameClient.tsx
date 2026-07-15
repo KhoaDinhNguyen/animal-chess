@@ -7,15 +7,16 @@ import { useGameChannel } from "@/hooks/useGameChannel";
 import { getOrCreateCookie } from "@/lib/cookies";
 import { Game } from "@game/core/Game";
 import { assignRoleToGame } from "@/lib/database";
+import { PlayerRole } from "@game/types";
 
 export const PLAYER_TOKEN = "player_token";
 
 export default function GameClient({ gameData, gameId }: { gameData: any; gameId: string }) {
-  const game = useGameStore((state) => state.gameConfig);
+  const gameConfig = useGameStore((state) => state.gameConfig);
   const setGameConfig = useGameStore((state) => state.setGameConfig);
   const subscribe = useGameChannel((s) => s.subscribe);
   const setGameId = useGameStore((s) => s.setGameId);
-  const [role, setRole] = useState<"player1" | "player2" | "spectator">("spectator");
+  const [role, setRole] = useState<PlayerRole>("spectator");
 
   useEffect(() => {
     setGameConfig(Game.fromJSON(gameData));
@@ -23,10 +24,11 @@ export default function GameClient({ gameData, gameId }: { gameData: any; gameId
   }, [gameData, setGameConfig, gameId]);
 
   useEffect(() => {
-    async function initToken() {
+    async function initToken(): Promise<[PlayerRole, string]> {
       let token = await getOrCreateCookie(PLAYER_TOKEN);
       const computedRole = await assignRoleToGame(gameId, token);
       console.log(computedRole);
+      console.log(gameConfig);
       setRole(computedRole);
 
       return [computedRole, token];
@@ -43,8 +45,8 @@ export default function GameClient({ gameData, gameId }: { gameData: any; gameId
   // Check the game first
   return (
     <>
-      {game !== null && game.winner !== null && <WinModal winner={game.winner} />}
-      <Board board={(game ?? Game.fromJSON(gameData)).board} role={role} />
+      {gameConfig !== null && gameConfig.winner !== null && <WinModal winner={gameConfig.winner} />}
+      <Board board={(gameConfig ?? Game.fromJSON(gameData)).board} role={role} />
     </>
   );
 }

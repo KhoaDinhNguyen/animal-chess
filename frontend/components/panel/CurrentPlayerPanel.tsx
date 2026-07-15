@@ -3,15 +3,16 @@ import { useGameStore } from "@/hooks/useGame";
 import { COLORS } from "@constants/colors";
 
 export default function CurrentPlayerPanel() {
-  const playerTurn = useGameStore((state) => state.gameConfig.player);
+  const playerTurn = useGameStore((state) => state.gameConfig.currentTurnPlayer);
 
-  const turnColor = playerTurn === 1 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
+  const turnColor = playerTurn === "player1" ? COLORS.P1_COLOR : COLORS.P2_COLOR;
 
   const playerName = (p1: string, p2: string) => {
     if (playerTurn === undefined) return "";
-    if (playerTurn === 1) return p1;
+    if (playerTurn === "player1") return p1;
     else return p2;
   };
+
   return (
     <div className="flex items-center justify-center gap-2 mt-1 px-0.5 mb-5">
       {/* Current player */}

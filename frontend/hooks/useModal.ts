@@ -8,16 +8,17 @@ type UseModalReturn = [
   closeModal: () => void
 ]
 
+/** Tracks whether a modal is open and exposes explicit open/close handlers. */
 export function useModal(initialState?: boolean): UseModalReturn {
-  const [modal, setModal] = useState(initialState || false);
+  const [isOpen, setIsOpen] = useState(initialState ?? false);
 
   function openModal() {
-    setModal(modal => true);
+    setIsOpen(true);
   }
 
   function closeModal() {
-    setModal(modal => false);
+    setIsOpen(false);
   }
 
-  return [modal, openModal, closeModal];
+  return [isOpen, openModal, closeModal];
 }
