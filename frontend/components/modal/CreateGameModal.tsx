@@ -1,5 +1,6 @@
 "use client";
-import Modal, { ModalAccentLine, ModalTitle, ModalCard, ModalButton } from "./Modal";
+import Modal, { ModalAccentLine, ModalTitle, ModalCard } from "./Modal";
+import AppButton from "../button/AppButton";
 import { useState } from "react";
 
 type GameMode = "single" | "multi";
@@ -65,15 +66,18 @@ export default function CreateGameModal({ formAction, open, onClose }: CreateGam
             </div>
 
             <div className="flex gap-3 mt-8">
-              <ModalButton
+              <AppButton
+                type="button"
                 variant="secondary"
                 onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(143,168,138,0.08)")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 onClick={onClose}>
                 Close
-              </ModalButton>
+              </AppButton>
 
-              <ModalButton variant="primary">Enter</ModalButton>
+              <AppButton variant="primary" type="submit">
+                Enter
+              </AppButton>
             </div>
           </form>
         </div>

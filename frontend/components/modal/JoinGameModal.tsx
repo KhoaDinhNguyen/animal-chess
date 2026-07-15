@@ -1,4 +1,5 @@
-import Modal, { ModalAccentLine, ModalTitle, ModalCard, ModalButton } from "./Modal";
+import Modal, { ModalAccentLine, ModalTitle, ModalCard } from "./Modal";
+import AppButton from "../button/AppButton";
 
 interface JoinGameModalProps {
   formAction: (formData: FormData) => void;
@@ -61,15 +62,18 @@ export default function JoinGameModal(props: JoinGameModalProps) {
             </div>
 
             <div className="flex gap-3 mt-8">
-              <ModalButton
+              <AppButton
                 variant="secondary"
+                type="button"
                 onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(143,168,138,0.08)")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 onClick={onClose}>
                 Close
-              </ModalButton>
+              </AppButton>
 
-              <ModalButton variant="primary">Enter</ModalButton>
+              <AppButton variant="primary" type="submit">
+                Enter
+              </AppButton>
             </div>
           </form>
         </div>

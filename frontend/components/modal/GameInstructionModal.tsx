@@ -1,5 +1,6 @@
 import { ANIMALS, INSTRUCTIONS } from "@constants/pieces";
-import Modal, { ModalAccentLine, ModalTitle, ModalCard, ModalButton } from "./Modal";
+import Modal, { ModalAccentLine, ModalTitle, ModalCard } from "./Modal";
+import AppButton from "../button/AppButton";
 import { X } from "lucide-react";
 import { gameInstructionStyles } from "./modal.styles";
 
@@ -20,9 +21,9 @@ export default function GameInstructionModal({ open, onClose }: GameInstructionM
         <div className="flex items-start justify-between px-8 pt-7 pb-4 shrink-0">
           <ModalTitle title="How to Play" subtitle="The Laws of the Jungle" />
 
-          <ModalButton variant="tertiary" onClick={onClose}>
+          <AppButton variant="tertiary" type="button" onClick={onClose}>
             <X size={18} />
-          </ModalButton>
+          </AppButton>
         </div>
 
         {/* Quick reference for each animal's rank */}

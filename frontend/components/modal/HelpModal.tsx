@@ -1,4 +1,5 @@
-import Modal, { ModalAccentLine, ModalButton, ModalCard } from "./Modal";
+import Modal, { ModalAccentLine, ModalCard } from "./Modal";
+import AppButton from "../button/AppButton";
 import { X } from "lucide-react";
 
 interface HelpModalProps {
@@ -18,9 +19,9 @@ export default function HelpModal(props: HelpModalProps) {
             <h2 className="text-xl" style={{ fontFamily: "'Cinzel Decorative', serif", color: "#f0e4c2" }}>
               Help
             </h2>
-            <ModalButton variant="tertiary" onClick={onClose}>
+            <AppButton variant="tertiary" type="button" onClick={onClose}>
               <X size={18} />
-            </ModalButton>
+            </AppButton>
           </div>
           <div className="space-y-3 text-xs leading-relaxed" style={{ color: "#a8c4a0" }}>
             <p>

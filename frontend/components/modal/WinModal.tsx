@@ -4,7 +4,8 @@ import { PlayerRole } from "@game/types";
 import { RotateCcw, Home } from "lucide-react";
 import { COLORS } from "@constants/colors";
 import { useRouter } from "next/navigation";
-import Modal, { ModalAccentLine, ModalButton, ModalCard } from "./Modal";
+import Modal, { ModalAccentLine, ModalCard } from "./Modal";
+import AppButton from "../button/AppButton";
 
 interface WinModalProps {
   winner: PlayerRole;
@@ -39,12 +40,13 @@ export default function WinModal(props: WinModalProps) {
           </p>
 
           <div className="flex gap-3">
-            <ModalButton variant="secondary">
+            <AppButton variant="secondary" type="button">
               <RotateCcw size={12} /> Play Again
-            </ModalButton>
+            </AppButton>
 
-            <ModalButton
+            <AppButton
               onClick={() => router.push("/")}
+              type="button"
               variant="primary"
               style={{
                 background:
@@ -53,7 +55,7 @@ export default function WinModal(props: WinModalProps) {
                     : "linear-gradient(135deg, #c62a2a, #8a1a1a)",
               }}>
               <Home size={12} /> Return Home
-            </ModalButton>
+            </AppButton>
           </div>
         </div>
       </ModalCard>

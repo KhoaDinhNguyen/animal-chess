@@ -7,23 +7,6 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-type ButtonVariant = "primary" | "secondary" | "tertiary";
-
-interface ButtonVariantProps {
-  type: React.HTMLInputTypeAttribute;
-  className: string;
-  style: React.CSSProperties;
-}
-
-interface ModalButtonProps {
-  variant: ButtonVariant;
-  children: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
-  onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
-  style?: React.CSSProperties;
-}
-
 // Renders the backdrop and closes the modal when the backdrop is clicked.
 export default function Modal(props: ModalProps) {
   const { open, onClose, children } = props;
@@ -81,58 +64,3 @@ export function ModalTitle({ title, subtitle }: { title: string; subtitle: strin
     </div>
   );
 }
-
-/**
- * Reusable modal button with predefined visual variants.
- */
-export function ModalButton(props: ModalButtonProps) {
-  const { variant, onClick, onMouseEnter, onMouseLeave, children, style } = props;
-
-  const config = MODAL_BUTTON_VARIANTS[variant];
-
-  return (
-    <button
-      type={config.type}
-      onClick={onClick}
-      className={config.className}
-      style={{ ...config.style, ...style }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}>
-      {children}
-    </button>
-  );
-}
-
-// Shared configuration for each modal button variant.
-const MODAL_BUTTON_VARIANTS = {
-  primary: {
-    type: "submit",
-    className:
-      "flex-1 py-2.5 text-xs tracking-widest uppercase flex items-center justify-center gap-2 transition-all hover:brightness-110",
-    style: {
-      fontFamily: "'Cinzel', serif",
-      background: "linear-gradient(135deg, #c8892a, #a06a18)",
-      color: "#0b1a10",
-      fontWeight: 600,
-      borderRadius: "2px",
-      border: "none",
-    },
-  },
-  secondary: {
-    type: "button",
-    className:
-      "flex-1 py-2.5 text-xs tracking-widest uppercase flex items-center justify-center gap-2 transition-colors",
-    style: {
-      fontFamily: "'Cinzel', serif",
-      background: "transparent",
-      border: "1px solid rgba(143,168,138,0.3)",
-      color: "#8fa88a",
-      borderRadius: "2px",
-    },
-  },
-  tertiary: {
-    type: "button",
-    className: "w-8 h-8 flex items-center justify-center transition-colors rounded-sm hover:bg-white/5",
-    style: { color: "#8fa88a" },
-  },
-} satisfies Record<string, ButtonVariantProps>;

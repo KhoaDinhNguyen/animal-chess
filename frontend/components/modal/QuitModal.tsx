@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Modal, { ModalAccentLine, ModalButton, ModalCard } from "./Modal";
+import Modal, { ModalAccentLine, ModalCard } from "./Modal";
+import AppButton from "../button/AppButton";
 
 interface QuitModalProps {
   onClose: () => void;
@@ -29,12 +30,12 @@ export default function QuitModal(props: QuitModalProps) {
           </p>
 
           <div className="flex gap-3">
-            <ModalButton variant="secondary" onClick={onClose}>
+            <AppButton variant="secondary" type="button" onClick={onClose}>
               Stay
-            </ModalButton>
-            <ModalButton variant="primary" onClick={() => router.push("/")}>
+            </AppButton>
+            <AppButton variant="primary" type="button" onClick={() => router.push("/")}>
               Quit
-            </ModalButton>
+            </AppButton>
           </div>
         </div>
       </ModalCard>
