@@ -1,6 +1,6 @@
 "use client";
 
-import { submitJoinGameForm } from "@/app/game/action";
+import { submitJoinGameForm } from "@/app/(lobby)/game/action";
 import JoinGameModal from "../modal/JoinGameModal";
 import { useModal } from "@/hooks/useModal";
 import AppButton from "./AppButton";

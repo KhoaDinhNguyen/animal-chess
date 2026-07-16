@@ -6,7 +6,7 @@ import { PlayerRole, GameMode } from "@game/types"
 export interface GameConfig {
   board: Board;
   selectedSquare: Position | null;
-  moveableSquares: Move[];
+  movableSquares: Move[];
   currentTurnPlayer: PlayerRole;
   mode: GameMode;
   winner: PlayerRole | null;
@@ -16,7 +16,7 @@ export interface GameConfig {
 export const defaultGameConfig: GameConfig = {
   board: new Board(),
   selectedSquare: null,
-  moveableSquares: [],
+  movableSquares: [],
   currentTurnPlayer: "player1",
   mode: "single",
   winner: null,

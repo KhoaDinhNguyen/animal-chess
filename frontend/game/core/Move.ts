@@ -22,6 +22,6 @@ export class Move {
   }
 
   static clone(m: Move) {
-    return new Move(m.from, m.to);
+    return new Move(Position.clone(m.from), Position.clone(m.to));
   }
 }

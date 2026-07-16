@@ -1,7 +1,7 @@
 "use client";
 import { useModal } from "@/hooks/useModal";
 import CreateGameModal from "../modal/CreateGameModal";
-import { submitCreateGameForm } from "@/app/game/action";
+import { submitCreateGameForm } from "@/app/(lobby)/game/action";
 import AppButton from "./AppButton";
 
 export default function CreateGameButton({ title }: { title: string }) {

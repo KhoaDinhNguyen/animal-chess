@@ -20,7 +20,7 @@ export class Game {
     this.config = {
       board: config.board ?? new Board(),
       selectedSquare: config.selectedSquare ?? null,
-      moveableSquares: config.moveableSquares ?? [],
+      movableSquares: config.movableSquares ?? [],
       currentTurnPlayer: config.currentTurnPlayer ?? "player1",
       mode: config.mode ?? "single",
       winner: config.winner ?? null,
@@ -47,7 +47,7 @@ export class Game {
     const piece = selectedSquare.piece;
     const canMove = piece && piece.player;
 
-    game.moveableSquares = canMove ? piece.getLegalMoves(game, selectedSquare.position) : [];
+    game.movableSquares = canMove ? piece.getLegalMoves(game, selectedSquare.position) : [];
 
     return game;
   }
@@ -59,7 +59,7 @@ export class Game {
   unselectSquare() {
     const game = Game.clone(this);
 
-    game.moveableSquares = [];
+    game.movableSquares = [];
     game.selectedSquare = null;
 
     return game;
@@ -79,7 +79,7 @@ export class Game {
     game.lastMove = new Move(from, to);
 
     game.selectedSquare = null;
-    game.moveableSquares = [];
+    game.movableSquares = [];
 
     game.currentTurnPlayer = this.getNextPlayer();
 
@@ -125,7 +125,7 @@ export class Game {
     return new Game({
       board: Board.clone(config.board),
       selectedSquare: config.selectedSquare ? Position.clone(config.selectedSquare) : null,
-      moveableSquares: config.moveableSquares.map(Move.clone),
+      movableSquares: config.movableSquares.map(Move.clone),
       currentTurnPlayer: config.currentTurnPlayer,
       mode: config.mode,
       winner: config.winner,
@@ -145,16 +145,16 @@ export class Game {
   }
 
 
-  static fromJSON(data: any): GameConfig {
-    return {
-      board: data.board,
+  static fromJSON(data: any): Game {
+    return new Game({
+      board: Board.clone(data.board),
       currentTurnPlayer: data.current_turn,
       winner: data.winner,
       mode: data.mode,
       selectedSquare: null,
-      moveableSquares: [],
-      lastMove: data.last_move
-    }
+      movableSquares: [],
+      lastMove: Move.clone(data.last_move)
+    })
   }
 
 
@@ -174,9 +174,9 @@ export class Game {
   get selectedSquare() { return this.config.selectedSquare };
   set selectedSquare(pos: Position | null) { this.config.selectedSquare = pos };
 
-  // get-set moveable squares
-  get moveableSquares() { return this.config.moveableSquares };
-  set moveableSquares(move: Move[]) { this.config.moveableSquares = move };
+  // get-set movable squares
+  get movableSquares() { return this.config.movableSquares };
+  set movableSquares(move: Move[]) { this.config.movableSquares = move };
 
   // get-set last move
   get lastMove() { return this.config.lastMove };

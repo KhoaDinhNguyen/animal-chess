@@ -24,7 +24,5 @@ export async function submitCreateGameForm(formData: FormData) {
     return;
   }
 
-  console.log(data);
   redirect(`/game/${data.id}`)
-
 }

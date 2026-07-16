@@ -4,10 +4,15 @@ import { useClipboard } from "@/hooks/useClipboard";
 import { useGameStore } from "@/hooks/useGame";
 import { Link2, Check, Copy } from "lucide-react";
 import AppButton from "../button/AppButton";
+import { useEffect, useState } from "react";
 
 export default function GameIdPanel() {
+  const [url, setUrl] = useState("");
   const gameId = useGameStore((s) => s.gameId);
-  const url = typeof window === "undefined" ? "" : window.location.href;
+
+  useEffect(() => {
+    setUrl(window.location.href);
+  }, [gameId]);
 
   if (gameId === null) return <></>;
 

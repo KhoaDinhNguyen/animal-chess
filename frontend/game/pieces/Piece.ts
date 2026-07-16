@@ -142,7 +142,7 @@ export class Piece {
       const targetSquare = game.board.squares[nextRow][nextCol];
       const destination = new Position(nextRow, nextCol);
 
-      // Check if the next square is moveable to den, trap, river, and plain
+      // Check if the next square is movable to den, trap, river, and plain
       if (this.canEnterSquare(currentSquare, targetSquare, game.currentTurnPlayer)) moves.push(new Move(position, destination));
     }
 
