@@ -44,8 +44,11 @@ export default function Square({ square, role }: { square: SquareClass; role: Pl
   const isSelected = selectedSquare?.equal(square.position) ?? false;
 
   // Last move boolean
-  const isLastMoveFrom = gameConfig.lastMove?.from.equal(square.position) ?? null;
-  const isLastMoveTo = gameConfig.lastMove?.to.equal(square.position) ?? null;
+  const lastMove = gameConfig.lastMove;
+  const { col, row } = square.position;
+
+  const isLastMoveFrom = lastMove && lastMove.from.col === col && lastMove.from.row === row;
+  const isLastMoveTo = lastMove && lastMove.to.col === col && lastMove.to.row === row;
   const nextPlayer = Game.clone(gameConfig).getNextPlayer();
 
   const handleSquareClick = () => {
