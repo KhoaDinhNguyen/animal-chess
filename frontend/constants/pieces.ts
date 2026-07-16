@@ -19,3 +19,28 @@ export const ANIMALS = [
   { rank: 2, name: "Cat", symbol: "🐱" },
   { rank: 1, name: "Mouse", symbol: "🐀" },
 ];
+
+
+
+export const INSTRUCTIONS = [
+  {
+    title: "Overview",
+    body: "Shou Dou Qi, also known as Jungle Chess or Animal Chess, is a two-player Chinese strategy board game. Each player commands eight animals ranked by strength, moving across a jungle terrain to capture the opponent's den.",
+  },
+  {
+    title: "The Board",
+    body: "The board is 9x7 squares. It contains two dens (one per player), three traps flanking each den, and two six-squares river in the center. River squares block most animals — only the Rat may enter water.",
+  },
+  {
+    title: "Animal Ranks",
+    body: "Animals are ranked 1-8. Higher rank captures lower rank. Exception: the Rat (rank 1) can capture the Elephant (rank 8) when entering its square. Traps weaken any animal to rank 0 — capturable by anything.",
+  },
+  {
+    title: "Movement",
+    body: "Each animal moves one square orthogonally per turn. The Lion and Tiger may leap over the river in a straight line — unless a Rat is in their path. The Rat is the only piece that can swim across the river.",
+  },
+  {
+    title: "Winning",
+    body: "A player wins by moving any animal into the opponent's den, or by capturing all of the opponent's pieces. Pieces cannot enter their own den.",
+  },
+];

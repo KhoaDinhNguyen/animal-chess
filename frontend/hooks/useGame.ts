@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { defaultGameConfig, GameConfig } from "@shared/game/core/GameConfig";
-import { PlayerNum } from "@shared/game/core/GameConfig";
+import { defaultGameConfig, GameConfig } from "@game/core/GameConfig";
 
+// ---- Type & Interface
 interface GameStore {
   gameConfig: GameConfig,
   gameId: string | null,
@@ -9,7 +9,8 @@ interface GameStore {
   setGameId: (gameId: string | null) => void,
 }
 
-export const useGameStore = create<GameStore>((set, get) => ({
+// ---- Zustand's function
+export const useGameStore = create<GameStore>((set) => ({
   gameConfig: defaultGameConfig,
   gameId: null,
   setGameConfig(gameConfig: GameConfig) {

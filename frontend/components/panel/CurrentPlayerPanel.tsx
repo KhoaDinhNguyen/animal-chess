@@ -1,31 +1,24 @@
 "use client";
 import { useGameStore } from "@/hooks/useGame";
-import { COLORS } from "@constants/colors";
+import { getPlayerColor } from "@constants/colors";
 
 export default function CurrentPlayerPanel() {
-  const playerTurn = useGameStore((state) => state.gameConfig.player);
+  const playerTurn = useGameStore((state) => state.gameConfig.currentTurnPlayer);
+  const currentPlayer = playerTurn === "player1" ? "1" : playerTurn === "player2" ? "2" : "";
 
-  const turnColor = playerTurn === 0 ? COLORS.P1_COLOR : COLORS.P2_COLOR;
-
-  const playerName = (p1: string, p2: string) => {
-    if (playerTurn === undefined) return "";
-    if (playerTurn === 0) return p1;
-    else return p2;
-  };
   return (
     <div className="flex items-center justify-center gap-2 mt-1 px-0.5 mb-5">
-      {/* Current player */}
       <div
         className="flex items-center gap-2 px-4 py-1.5 text-xs tracking-widest uppercase"
         style={{
           fontFamily: "'Cinzel', serif",
-          background: `${turnColor}18`,
-          border: `1px solid ${turnColor}80`,
+          background: `${getPlayerColor(playerTurn, 18)}`,
+          border: `1px solid ${getPlayerColor(playerTurn, 80)}`,
           borderRadius: "2px",
-          color: turnColor,
+          color: getPlayerColor(playerTurn),
         }}>
-        <div className="w-2 h-2 rounded-full" style={{ background: turnColor }} />
-        Player {playerName("1", "2")}&apos;s Turn
+        <div className="w-2 h-2 rounded-full" style={{ background: getPlayerColor(playerTurn) }} />
+        Player {currentPlayer}&apos;s Turn
       </div>
     </div>
   );

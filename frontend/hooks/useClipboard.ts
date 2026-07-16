@@ -1,15 +1,18 @@
 "use client";
 import { useState } from "react";
 
-type UseClipBoardReturn = [
+type UseClipboardReturn = [
   copied: boolean,
-  handleCopy: (copyText: string) => void
+  copyToClipboard: (copyText: string) => Promise<void>
 ]
 
-export function useClipBoard(): UseClipBoardReturn {
+const COPIED_FEEDBACK_MS = 2000;
+
+/** Copies text and briefly marks the copy action as successful for UI feedback. */
+export function useClipboard(): UseClipboardReturn {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async (copyText: string) => {
+  const copyToClipboard = async (copyText: string) => {
     try {
       await navigator.clipboard.writeText(copyText);
 
@@ -17,12 +20,12 @@ export function useClipBoard(): UseClipBoardReturn {
 
       setTimeout(() => {
         setCopied(false);
-      }, 2000);
+      }, COPIED_FEEDBACK_MS);
 
     } catch (err) {
       console.log(err);
     }
   }
 
-  return [copied, handleCopy];
+  return [copied, copyToClipboard];
 }

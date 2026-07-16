@@ -16,19 +16,19 @@ export default function WaitingTurnIndicator() {
         Waiting
       </span>
       <span className="flex gap-1 ml-0.5">
-        <span
-          className={`${styles["dot-1"]} inline-block rounded-full`}
-          style={{ width: 4, height: 4, background: "#c8892a" }}
-        />
-        <span
-          className={`${styles["dot-2"]} inline-block rounded-full`}
-          style={{ width: 4, height: 4, background: "#c8892a" }}
-        />
-        <span
-          className={`${styles["dot-3"]} inline-block rounded-full`}
-          style={{ width: 4, height: 4, background: "#c8892a" }}
-        />
+        <WaitingDot order={1} />
+        <WaitingDot order={2} />
+        <WaitingDot order={2} />
       </span>
     </div>
+  );
+}
+
+function WaitingDot({ order }: { order: number }) {
+  return (
+    <span
+      className={`${styles[`dot-${order}`]} inline-block rounded-full`}
+      style={{ width: 4, height: 4, background: "#c8892a" }}
+    />
   );
 }
