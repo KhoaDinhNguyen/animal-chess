@@ -153,7 +153,7 @@ export class Game {
       mode: data.mode,
       selectedSquare: null,
       movableSquares: [],
-      lastMove: Move.clone(data.last_move)
+      lastMove: data.last_move ? Move.clone(data.last_move) : null
     })
   }
 

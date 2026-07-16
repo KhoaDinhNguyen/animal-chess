@@ -12,7 +12,7 @@ import { Game } from "@game/core/Game";
 
 import { makeMove } from "@/lib/services";
 // Import constant
-import { COLORS, getPlayerColor } from "@constants/colors";
+import { getPlayerColor } from "@constants/colors";
 import { BOARD } from "@constants/board";
 import { ANIMALS } from "@constants/pieces";
 
