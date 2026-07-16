@@ -6,6 +6,7 @@ import { COLORS } from "@constants/colors";
 import { BOARD } from "@constants/board";
 import PlayerStatus from "./PlayerStatus";
 import { useGameChannel } from "@/hooks/useGameChannel";
+
 interface BoardProps {
   board: BoardClass;
   role: string;

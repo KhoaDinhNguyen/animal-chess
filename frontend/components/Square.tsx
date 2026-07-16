@@ -47,9 +47,6 @@ export default function Square({ square, role }: { square: SquareClass; role: st
     ? square.position.col === gameConfig.lastMove.to.col && square.position.row === gameConfig.lastMove.to.row
     : null;
 
-  if (isLastMoveFrom) {
-    console.log(square.position, isLastMoveFrom);
-  }
   const onClickSquare = async () => {
     const selected = gameConfig.selectedSquare;
 
